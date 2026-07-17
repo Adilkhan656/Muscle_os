@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "175089052832",
+    "project_id": "muscleos-cb59b",
+    "storage_bucket": "muscleos-cb59b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175089052832:android:215e6cb0fe75b1a8c2adc5",
+        "android_client_info": {
+          "package_name": "com.musclesOS.adil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175089052832-hgvnlmh3ahkc94bveni6gb2v2bjsbhhq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.musclesOS.adil",
+            "certificate_hash": "5e02a7a4f3a6dff15b185e083b6f6c49afcfb4e0"
+          }
+        },
+        {
+          "client_id": "175089052832-mbd56q6074g8hcohsr0fngblurk3k13t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaBdLA5W-a1KRRjDraZiNg2PLis_Fch6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175089052832-mbd56q6074g8hcohsr0fngblurk3k13t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

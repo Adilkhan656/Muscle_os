@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Dark mode overrides -->
+    <color name="bg_main">#000000</color>
+    <color name="text_main">#FFFFFF</color>
+    <color name="text_sub">#E0E0E0</color>
+    <color name="text_hint">#B0B0B0</color>
+    <color name="text_field">#E0E0E0</color>
+
+    <color name="btn_bg">#FFFFFF</color>
+    <color name="btn_text">#000000</color>
+    <color name="wave_color">#1E1E1E</color>
+    <color name="field_bg">#1E1E1E</color>
+    <color name="social_bg">#1E1E1E</color>
+    <color name="social_stroke">#333333</color>
+
+    <color name="scrim_start">#90000000</color>
+    <color name="scrim_end">#FF000000</color>
+
+    <!-- More vibrant orange for dark mode -->
+    <color name="orange_primary">#FF8C3A</color>
+    <color name="orange_vibrant">#FF7F50</color>
+</resources>

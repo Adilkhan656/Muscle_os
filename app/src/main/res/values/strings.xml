@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">MuscleOS</string>
+    <string name="screen_title">Sign In &amp; Sign Up</string>
+
+    <string name="sign_in_headline">Sign In To Ulpift</string>
+    <string name="subheadline_personalize">Let\'s personalize your fitness with AI</string>
+    <string name="sign_up_headline">Sign Up For Free</string>
+    <string name="sign_up_subheadline">Quickly make your account in 1 minute</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_password">Password</string>
+    <string name="forgot_password">Forgot Password</string>
+
+    <string name="facebook_app_id">1542127330955573</string>
+    <string name="facebook_client_token">9cfa272d2df8f65b8927f6a3684f2ae8</string>
+    <string name="fb_login_protocol_scheme">fb1542127330955573</string>
+    <string name="web_client_id">175089052832-mbd56q6074g8hcohsr0fngblurk3k13t.apps.googleusercontent.com</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="enter_your_name">Enter Your Name</string>
+
+    <string name="create_account">Create Account</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="resend_email">Resend Email</string>
+    <string name="verify_email_headline">Verify Your Email</string>
+    <string name="verify_email_subheadline">Open the verification link sent to your email, then come back here.</string>
+    <string name="im_verified">I\'m Verified</string>
+    <string name="resend_email_verification">Resend Email Verification</string>
+    <string name="app_logo">App logo</string>
+    <string name="headline_unleash">UNLEASH YOUR\nPOTENTIAL</string>
+    <string name="subheadline_track">Track. Train. Transform.</string>
+    <string name="enter_your_email">Email address</string>
+    <string name="enter_your_password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="sign_up_underlined"><u>Sign Up.</u></string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="sign_in_underlined"><u>Sign In.</u></string>
+    <string name="forgot_password_underlined"><u>Forgot Password</u></string>
+    <string name="dont_have_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="dont_have_account_sign_up_period">Don\'t have an account? Sign Up.</string>
+    <string name="or_continue_with">OR CONTINUE WITH</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+</resources>
