@@ -1,8 +1,7 @@
-package com.musclesOS.adil.Utils
+package com.musclesOS.adil.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import dagger.hilt.android.internal.Contexts
 
 object NetworkUtils {
     fun isInternetAvailable(context: Context): Boolean {

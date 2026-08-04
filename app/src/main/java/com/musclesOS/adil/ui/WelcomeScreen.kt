@@ -1,4 +1,4 @@
-package com.musclesOS.adil.Ui
+package com.musclesOS.adil.ui
 
 import android.content.Intent
 import android.graphics.Color
@@ -13,11 +13,11 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.content.ContextCompat
 import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.R
-import com.musclesOS.adil.Ui.Auth.LoginActivity
-import com.musclesOS.adil.Ui.Auth.RegisterScreen
+import com.musclesOS.adil.ui.auth.LoginActivity
+import com.musclesOS.adil.ui.auth.RegisterScreen
 import com.musclesOS.adil.databinding.ActivityWelcomeScreenBinding
 import com.musclesOS.adil.repository.AuthRepository
-import com.musclesOS.adil.Ui.Auth.viewmodel.AuthViewModel
+import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
 
 /**
  * The initial screen shown to unauthenticated users.

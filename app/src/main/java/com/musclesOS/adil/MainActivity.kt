@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.doOnPreDraw
-import com.musclesOS.adil.Ui.Auth.LoginActivity
+import com.musclesOS.adil.ui.auth.LoginActivity
 import com.musclesOS.adil.databinding.ActivityMainBinding
 import com.musclesOS.adil.repository.AuthRepository
 

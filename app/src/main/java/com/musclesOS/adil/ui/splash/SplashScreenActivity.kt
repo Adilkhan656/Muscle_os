@@ -1,8 +1,7 @@
-package com.musclesOS.adil.Ui.splash
+package com.musclesOS.adil.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.musclesOS.adil.MainActivity
-import com.musclesOS.adil.Ui.WelcomeScreen
+import com.musclesOS.adil.ui.WelcomeScreen
 import com.musclesOS.adil.core.AppDestination
 import com.musclesOS.adil.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.launch

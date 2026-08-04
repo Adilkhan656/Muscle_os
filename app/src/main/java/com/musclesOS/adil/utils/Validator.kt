@@ -1,4 +1,4 @@
-package com.musclesOS.adil.Utils
+package com.musclesOS.adil.utils
 
 import android.util.Patterns
 

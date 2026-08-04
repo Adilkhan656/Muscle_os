@@ -10,8 +10,7 @@
     <string name="label_password">Password</string>
     <string name="forgot_password">Forgot Password</string>
 
-    <string name="facebook_app_id">1542127330955573</string>
-    <string name="facebook_client_token">9cfa272d2df8f65b8927f6a3684f2ae8</string>
+
     <string name="fb_login_protocol_scheme">fb1542127330955573</string>
     <string name="web_client_id">175089052832-mbd56q6074g8hcohsr0fngblurk3k13t.apps.googleusercontent.com</string>
     <string name="sign_out">Sign Out</string>
@@ -42,4 +41,6 @@
     <string name="dont_have_account_sign_up_period">Don\'t have an account? Sign Up.</string>
     <string name="or_continue_with">OR CONTINUE WITH</string>
     <string name="continue_as_guest">Continue as Guest</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

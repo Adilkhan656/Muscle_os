@@ -1,8 +1,7 @@
-package com.musclesOS.adil.Ui.Auth
+package com.musclesOS.adil.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -14,8 +13,8 @@ import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.databinding.ActivityVerifyEmailBinding
 import com.musclesOS.adil.model.AuthState
 import com.musclesOS.adil.repository.AuthRepository
-import com.musclesOS.adil.Ui.Auth.viewmodel.AuthViewModel
-import com.musclesOS.adil.Utils.setLoadingState
+import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
+import com.musclesOS.adil.utils.setLoadingState
 import kotlinx.coroutines.launch
 
 /**

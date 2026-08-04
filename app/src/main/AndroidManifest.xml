@@ -38,48 +38,50 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".Ui.Auth.LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Ui.Auth.RegisterScreen"
+            android:name=".ui.auth.RegisterScreen"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Ui.Auth.ForgetpasswordScreen"
+            android:name=".ui.auth.ForgetpasswordScreen"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Ui.Auth.VerifyEmailActivity"
+            android:name=".ui.auth.VerifyEmailActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Ui.WelcomeScreen"
+            android:name=".ui.WelcomeScreen"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MuscleOS"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MuscleOS"
             android:windowSoftInputMode="adjustResize">
-
-        </activity>
-        <activity
-            android:name=".Ui.splash.SplashActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.MuscleOS"
-            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.onboarding.activity.OnboardingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

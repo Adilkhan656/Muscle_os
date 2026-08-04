@@ -1,8 +1,10 @@
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
-//    alias(libs.plugins.kotlin.android)
-//    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -21,6 +23,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Load secrets from local.properties
+        val properties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { properties.load(it) }
+        }
+
+        resValue("string", "facebook_app_id", properties.getProperty("facebook_app_id") ?: "")
+        resValue("string", "facebook_client_token", properties.getProperty("facebook_client_token") ?: "")
     }
 
     buildTypes {
@@ -38,10 +50,8 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        resValues = true
     }
-//    kapt {
-//        correctErrorTypes = true
-//    }
 }
 
 dependencies {
@@ -56,15 +66,27 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.material)
+    //fragment navigation
+    val nav_version = "2.9.8" // Use the latest stable version
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+    //viewpager2
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    //firebase
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
-    // Used by existing authentication screens; the liquid splash itself has no
-    // Lottie, video, bitmap animation, OpenGL, or third-party renderer.
+    implementation(libs.firebase.firestore)
+//lottie
     implementation("com.airbnb.android:lottie:6.6.7")
     implementation(libs.androidx.credentials)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
     implementation(libs.androidx.credentials.play.services.auth)
+    //Facebook
     implementation("com.facebook.android:facebook-login:18.1.3")
     implementation(libs.googleid)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
     implementation(libs.firebase.auth)
     implementation(libs.hilt.android)

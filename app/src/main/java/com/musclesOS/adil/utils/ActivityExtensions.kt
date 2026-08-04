@@ -1,7 +1,6 @@
-package com.musclesOS.adil.Utils
+package com.musclesOS.adil.utils
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View

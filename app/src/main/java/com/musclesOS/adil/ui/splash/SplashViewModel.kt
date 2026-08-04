@@ -1,4 +1,4 @@
-package com.musclesOS.adil.Ui.splash
+package com.musclesOS.adil.ui.splash
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

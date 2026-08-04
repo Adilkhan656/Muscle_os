@@ -1,8 +1,7 @@
-package com.musclesOS.adil.Ui.Auth
+package com.musclesOS.adil.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -24,12 +23,13 @@ import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.ActivityLoginBinding
 import com.musclesOS.adil.model.AuthState
 import com.musclesOS.adil.model.FacebookAuthManager
-import com.musclesOS.adil.Utils.Validator
-import com.musclesOS.adil.Utils.bindPasswordToggle
-import com.musclesOS.adil.Utils.requireInternet
+import com.musclesOS.adil.utils.Validator
+import com.musclesOS.adil.utils.bindPasswordToggle
+import com.musclesOS.adil.utils.requireInternet
 import com.musclesOS.adil.repository.AuthRepository
-import com.musclesOS.adil.Ui.Auth.viewmodel.AuthViewModel
-import com.musclesOS.adil.Utils.setLoadingState
+import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
+import com.musclesOS.adil.ui.onboarding.activity.OnboardingActivity
+import com.musclesOS.adil.utils.setLoadingState
 import kotlinx.coroutines.launch
 
 /**
@@ -437,7 +437,8 @@ requireInternet {
         startActivity(
             Intent(
                 this,
-                MainActivity::class.java
+//                MainActivity::class.java
+                OnboardingActivity::class.java
             )
         )
 

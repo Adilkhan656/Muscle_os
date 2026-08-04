@@ -1,4 +1,4 @@
-package com.musclesOS.adil.Ui.Auth.viewmodel
+package com.musclesOS.adil.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

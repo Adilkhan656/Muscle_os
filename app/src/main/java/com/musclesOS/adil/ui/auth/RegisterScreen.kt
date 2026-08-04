@@ -1,10 +1,9 @@
-package com.musclesOS.adil.Ui.Auth
+package com.musclesOS.adil.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,11 +14,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.ActivityRegisterScreenBinding
 import com.musclesOS.adil.model.AuthState
-import com.musclesOS.adil.Utils.Validator
-import com.musclesOS.adil.Utils.bindPasswordToggle
+import com.musclesOS.adil.utils.Validator
+import com.musclesOS.adil.utils.bindPasswordToggle
 import com.musclesOS.adil.repository.AuthRepository
-import com.musclesOS.adil.Ui.Auth.viewmodel.AuthViewModel
-import com.musclesOS.adil.Utils.setLoadingState
+import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
+import com.musclesOS.adil.utils.setLoadingState
 import kotlinx.coroutines.launch
 
 /**
