@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg_main" android:paddingHorizontal="16dp">
+
+    <include android:id="@+id/header" layout="@layout/onboarding_header_height" />
+
+    <TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:gravity="center" android:text="What’s your current weight?" android:textColor="@color/text_main" android:textSize="30sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <RadioGroup android:id="@+id/unitGroup" android:layout_width="0dp" android:layout_height="48dp" android:layout_marginTop="32dp" android:orientation="horizontal" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/title">
+        <RadioButton android:id="@+id/kg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@drawable/bg_onboarding_choice" android:button="@null" android:gravity="center" android:text="Kilograms" android:textColor="@color/text_main" android:textSize="15sp" android:textStyle="bold" />
+        <Space android:layout_width="12dp" android:layout_height="1dp" />
+        <RadioButton android:id="@+id/lbs" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@drawable/bg_onboarding_choice" android:button="@null" android:gravity="center" android:text="Pounds" android:textColor="@color/text_main" android:textSize="15sp" android:textStyle="bold" />
+    </RadioGroup>
+
+    <TextView android:id="@+id/weightValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="52dp" android:text="62 kg" android:textColor="@color/text_main" android:textSize="48sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/unitGroup" />
+
+    <com.musclesOS.adil.customView.AssessmentScaleView android:id="@+id/weightScale" android:layout_width="0dp" android:layout_height="150dp" android:layout_marginTop="24dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/weightValue" />
+
+    <TextView android:id="@+id/hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Swipe left or right to adjust" android:textColor="@color/text_hint" android:textSize="14sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/weightScale" />
+
+    <TextView android:id="@+id/button3" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginBottom="34dp" android:background="@drawable/bg_onboarding_button" android:gravity="center" android:text="Continue   →" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

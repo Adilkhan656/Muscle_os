@@ -3,11 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/onboarding_nav_graph.xml"
-    app:startDestination="@id/welcomeFragment">
+    app:startDestination="@id/genderFragment">
 
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.musclesOS.adil.ui.onboarding.fragment.WelcomeFragment"
         android:label="fragment_welcome"
-        tools:layout="@layout/fragment_welcome" />
+        tools:layout="@layout/fragment_welcome" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_genderFragment"
+            app:destination="@id/genderFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/genderFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.GenderFragment"
+        android:label="fragment_gender"
+        tools:layout="@layout/fragment_gender" >
+        <action
+            android:id="@+id/action_genderFragment_to_heightFragment"
+            app:destination="@id/heightFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/heightFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.HeightFragment"
+        android:label="fragment_height"
+        tools:layout="@layout/fragment_height" >
+        <action
+            android:id="@+id/action_heightFragment_to_weightFragment"
+            app:destination="@id/weightFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/weightFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.WeightFragment"
+        android:label="fragment_weight"
+        tools:layout="@layout/fragment_weight" >
+        <action
+            android:id="@+id/action_weightFragment_to_focusAreaFragment"
+            app:destination="@id/focusAreaFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/goalFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.GoalFragment"
+        android:label="fragment_goal"
+        tools:layout="@layout/fragment_goal" >
+        <action
+            android:id="@+id/action_goalFragment_to_finishFragment"
+            app:destination="@id/finishFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/focusAreaFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.FocusAreaFragment"
+        android:label="fragment_focus_area"
+        tools:layout="@layout/fragment_focus_area" >
+        <action
+            android:id="@+id/action_focusAreaFragment_to_goalFragment"
+            app:destination="@id/goalFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/finishFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.FinishFragment"
+        android:label="fragment_finish"
+        tools:layout="@layout/fragment_finish" />
 </navigation>

@@ -20,6 +20,9 @@
     <color name="scrim_start">#90000000</color>
     <color name="scrim_end">#FF000000</color>
 
+    <color name="ripple_primary">#1A000000</color>
+    <color name="ripple_social">#40FFFFFF</color>
+
     <!-- More vibrant orange for dark mode -->
     <color name="orange_primary">#FF8C3A</color>
     <color name="orange_vibrant">#FF7F50</color>

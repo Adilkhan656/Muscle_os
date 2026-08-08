@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+    implementation("androidx.cardview:cardview:1.0.0")
 
     implementation(libs.firebase.auth)
     implementation(libs.hilt.android)

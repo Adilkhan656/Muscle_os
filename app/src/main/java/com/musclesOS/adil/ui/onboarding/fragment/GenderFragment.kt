@@ -5,56 +5,50 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
+import com.musclesOS.adil.databinding.FragmentGenderBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GenderFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class GenderFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+class GenderFragment : Fragment(R.layout.fragment_gender) {
+private var _binding : FragmentGenderBinding?= null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentGenderBinding.bind(view)
+        listOf(binding.backButton, binding.assessmentTitle, binding.progress).forEachIndexed { index, headerView ->
+            headerView.translationX = -24f
+            headerView.alpha = 0f
+            headerView.animate().translationX(0f).alpha(1f).setStartDelay((index * 70).toLong()).setDuration(280).start()
         }
+        binding.backButton.setOnClickListener { requireActivity().finish() }
+        initClicklistner()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gender, container, false)
+private fun initClicklistner (){
+    fun select(male: Boolean) {
+        val selected = if (male) R.color.orange_primary else R.color.field_bg
+        val unselected = if (male) R.color.field_bg else R.color.orange_primary
+        binding.cardMale.setCardBackgroundColor(resources.getColor(selected, null))
+        binding.cardFemale.setCardBackgroundColor(resources.getColor(unselected, null))
+        binding.maleCheck.visibility = if (male) View.VISIBLE else View.GONE
+        binding.femaleCheck.visibility = if (male) View.GONE else View.VISIBLE
     }
+    binding.cardMale.setOnClickListener { select(true) }
+    binding.cardFemale.setOnClickListener { select(false) }
+    binding.skipButton.setOnClickListener { findNavController().navigate(R.id.action_genderFragment_to_heightFragment) }
+    binding.button3.setOnClickListener {
+        findNavController().navigate(R.id.action_genderFragment_to_heightFragment)
+    }
+}
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GenderFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GenderFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

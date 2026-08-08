@@ -22,4 +22,7 @@
 
     <color name="scrim_start">#90FFFFFF</color>
     <color name="scrim_end">#FFFFFFFF</color>
+
+    <color name="ripple_primary">#40FFFFFF</color>
+    <color name="ripple_social">#1A000000</color>
 </resources>
