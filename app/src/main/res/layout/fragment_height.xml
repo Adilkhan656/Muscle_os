@@ -1,9 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg_main" android:paddingHorizontal="16dp">
-    <include android:id="@+id/header" layout="@layout/onboarding_header_height"/>
-    <TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="44dp" android:gravity="center" android:text="What’s your height?" android:textColor="@color/text_main" android:textSize="30sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/header"/>
-    <TextView android:id="@+id/heightValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="28dp" android:layout_marginTop="92dp" android:text="175 cm" android:textColor="@color/text_main" android:textSize="48sp" android:textStyle="bold" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/title"/>
-    <com.musclesOS.adil.customView.AssessmentScaleView android:id="@+id/heightScale" android:layout_width="176dp" android:layout_height="0dp" android:layout_marginTop="16dp" android:layout_marginBottom="88dp" app:layout_constraintBottom_toTopOf="@id/button3" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@id/title"/>
-    <TextView android:id="@+id/hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="30dp" android:text="Swipe up or down" android:textColor="@color/text_hint" android:textSize="14sp" app:layout_constraintBottom_toTopOf="@id/button3" app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="16dp"/>
-    <TextView android:id="@+id/button3" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginBottom="34dp" android:background="@drawable/bg_onboarding_button" android:gravity="center" android:text="Continue   →" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:paddingHorizontal="16dp">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/onboarding_header_height" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:gravity="center"
+        android:text="What’s your height?"
+        android:textColor="@color/text_main"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <TextView
+        android:id="@+id/heightValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="92dp"
+        android:text="175 cm"
+        android:textColor="@color/text_main"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <com.musclesOS.adil.customView.AssessmentScaleView
+        android:id="@+id/heightScale"
+        android:layout_width="176dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="88dp"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="16dp"
+        android:text="Swipe up or down"
+        android:textColor="@color/text_hint"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <RadioGroup
+        android:id="@+id/heightUnitGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_onboarding_choice"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="@id/heightValue"
+        app:layout_constraintTop_toBottomOf="@id/heightValue">
+
+        <RadioButton
+            android:id="@+id/cm"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:text="CM"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:checked="true"
+            android:background="@drawable/bg_onboarding_choice_selected" />
+
+        <RadioButton
+            android:id="@+id/ftIn"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:text="FT / IN"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_onboarding_choice" />
+
+    </RadioGroup>
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/bg_onboarding_button"
+        android:gravity="center"
+        android:text="Continue   →"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
