@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  bg_hotspot_marker.xml
+  Save this in res/drawable/. This is a simple selector: the dot looks
+  translucent/white normally, and turns solid orange when tapped/selected.
+  We toggle it in code via setSelected(true/false) so no extra XML states
+  are needed for now — just one look.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#33FFFFFF" />
+    <stroke
+        android:width="2dp"
+        android:color="#FFFFFF" />
+</shape>

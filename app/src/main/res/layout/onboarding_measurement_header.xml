@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="140dp">
+    <ImageButton android:id="@+id/backButton" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginTop="36dp" android:background="@android:color/transparent" android:contentDescription="Back" android:padding="10dp" android:rotation="180" android:src="@drawable/ic_arrow_right" app:tint="@color/text_main" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <TextView android:id="@+id/skip" android:layout_width="wrap_content" android:layout_height="48dp" android:layout_marginTop="36dp" android:gravity="center" android:text="Skip" android:textColor="@color/text_hint" android:textSize="18sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout android:id="@+id/progress" android:layout_width="0dp" android:layout_height="3dp" android:layout_marginTop="18dp" android:orientation="horizontal" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/backButton">
+        <View android:id="@+id/progressFilled" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="2" android:background="@color/orange_primary" />
+        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="12dp" android:layout_weight="1" android:background="@color/field_bg" />
+        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="12dp" android:layout_weight="1" android:background="@color/field_bg" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

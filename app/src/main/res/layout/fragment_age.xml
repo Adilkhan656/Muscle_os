@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:paddingHorizontal="16dp">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/onboarding_header_height" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/work_sans"
+        android:text="How old are you?"
+        android:textColor="@color/text_main"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/work_sans"
+        android:text="This helps us personalize your intensity"
+        android:textColor="@color/text_sub"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <LinearLayout
+        android:id="@+id/ageDisplayContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintVertical_bias="0.45">
+
+        <TextView
+            android:id="@+id/ageValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/work_sans"
+            android:includeFontPadding="false"
+            android:text="24"
+            android:textColor="@color/text_main"
+            android:textSize="110sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/work_sans"
+            android:includeFontPadding="false"
+            android:text="Years"
+            android:textColor="@color/orange_primary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <com.musclesOS.adil.customView.AssessmentScaleView
+        android:id="@+id/ageScale"
+        android:layout_width="240dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle" />
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="@font/work_sans"
+        android:text="Swipe up or down"
+        android:textColor="@color/text_hint"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintEnd_toEndOf="@id/ageScale" />
+
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/bg_onboarding_button"
+        android:gravity="center"
+        android:text="Continue   →"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

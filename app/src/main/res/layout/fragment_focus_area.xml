@@ -1,10 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg_main" android:paddingHorizontal="16dp">
-    <include android:id="@+id/header" layout="@layout/onboarding_header_height"/>
-    <TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:gravity="center" android:text="What is your focus area?" android:textColor="@color/text_main" android:textSize="30sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/header"/>
-    <TextView android:id="@+id/subtitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:text="Pick the training focus that matters most to you." android:textColor="@color/text_hint" android:textSize="16sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/title"/>
-    <LinearLayout android:id="@+id/focusAreas" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="36dp" android:orientation="vertical" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/subtitle">
-        <TextView android:id="@+id/focusStrength" style="@style/OnboardingChoice" android:text="⌁  Strength &amp; muscle"/><TextView android:id="@+id/focusCardio" style="@style/OnboardingChoice" android:text="♥  Cardio &amp; endurance"/><TextView android:id="@+id/focusMobility" style="@style/OnboardingChoice" android:text="◌  Mobility &amp; flexibility"/><TextView android:id="@+id/focusWhole" style="@style/OnboardingChoice" android:text="✦  Full body fitness"/>
-    </LinearLayout>
-    <TextView android:id="@+id/button3" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginBottom="34dp" android:background="@drawable/bg_onboarding_button" android:gravity="center" android:text="Continue   →" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+<!--
+  fragment_focus_area.xml
+
+  Layout: photo on the left (its dots are added by Kotlin code, not
+  here), checklist rows on the right (also added by Kotlin code - one
+  row per MuscleOption). The Guideline controls the split point between
+  the two columns; move guide_percent to change how much width the
+  photo gets.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:paddingHorizontal="16dp">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/onboarding_header_height" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="What is your focus area?"
+        android:textColor="@color/text_main"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/columnSplit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
+
+    <!-- Photo column. FrameLayout so dot Views can be added at raw
+         pixel positions computed from each MuscleOption's bias. -->
+    <FrameLayout
+        android:id="@+id/bodyImageContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintEnd_toStartOf="@id/columnSplit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <ImageView
+            android:id="@+id/bodyImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/body_front" />
+
+        <!-- Dot views get added here in code, one per MuscleOption
+             that has hasBodyDot = true. -->
+
+    </FrameLayout>
+
+    <!-- Checklist column. Rows get added here in code, one per
+         MuscleOption, in the same order as MuscleOptions.ALL. -->
+    <LinearLayout
+        android:id="@+id/optionsList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/columnSplit"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <!-- On top of everything, draws the animated dashed lines. Touches
+         pass straight through to the dots/rows/button underneath. -->
+    <com.musclesOS.adil.ui.onboarding.CalloutOverlayView
+        android:id="@+id/calloutOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/bg_onboarding_button"
+        android:gravity="center"
+        android:text="Next   →"
+        android:textColor="@color/btn_text"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

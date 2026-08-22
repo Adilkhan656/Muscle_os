@@ -27,15 +27,41 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
         setupUnitSelector()
         setupScale()
         initClickListener()
+        applyPremiumAnimations()
+    }
+
+    private fun applyPremiumAnimations() {
+        // Header animation
+        listOf(binding.header.backButton, binding.header.skip, binding.header.progress).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationX = -24f
+            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        }
+
+        // Title, Unit Group and Value animation
+        listOf(binding.title, binding.unitGroup, binding.weightValue).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationY = 30f
+            view.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(150 + (index * 50).toLong()).start()
+        }
+
+        // Scale and Hint animation
+        listOf(binding.weightScale, binding.hint).forEach { view ->
+            view.alpha = 0f
+            view.animate().alpha(1f).setDuration(800).setStartDelay(400).start()
+        }
+
+        // Button animation
+        binding.button3.alpha = 0f
+        binding.button3.animate().alpha(1f).setDuration(500).setStartDelay(600).start()
     }
 
     private fun setupHeader() {
 
-        binding.header.progress.text = "3 of 5"
-
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_weightFragment_to_ageFragment) }
     }
 
     private fun setupInitialWeight() {
@@ -55,17 +81,11 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
             step = 0.1
 
             value = 62.0
-
-            vertical = false
-            inverted = false
+            unit = "kg"
 
             onValueChanged = { selected ->
 
                 updateWeightDisplay(selected)
-            }
-
-            valueFormatter = { raw ->
-                String.format(Locale.US, "%.1f", raw)
             }
         }
 
@@ -150,44 +170,37 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
                 value,
                 unit
             )
+        binding.weightScale.unit = unit
     }
 
     private fun updateUnitChoice() {
 
         binding.kg.setBackgroundResource(
             if (binding.kg.isChecked) {
-                R.drawable.bg_onboarding_choice_selected
+                R.drawable.bg_measurement_toggle_selected
             } else {
-                R.drawable.bg_onboarding_choice
+                android.R.color.transparent
             }
         )
 
         binding.lbs.setBackgroundResource(
             if (binding.lbs.isChecked) {
-                R.drawable.bg_onboarding_choice_selected
+                R.drawable.bg_measurement_toggle_selected
             } else {
-                R.drawable.bg_onboarding_choice
+                android.R.color.transparent
             }
         )
 
         binding.kg.setTextColor(
             resources.getColor(
-                if (binding.kg.isChecked) {
-                    R.color.white
-                } else {
-                    R.color.text_main
-                },
+                R.color.text_main,
                 null
             )
         )
 
         binding.lbs.setTextColor(
             resources.getColor(
-                if (binding.lbs.isChecked) {
-                    R.color.white
-                } else {
-                    R.color.text_main
-                },
+                R.color.text_main,
                 null
             )
         )
@@ -198,7 +211,7 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
         binding.button3.setOnClickListener {
 
             findNavController().navigate(
-                R.id.action_weightFragment_to_focusAreaFragment
+                R.id.action_weightFragment_to_ageFragment
             )
         }
     }

@@ -38,7 +38,16 @@
         android:label="fragment_weight"
         tools:layout="@layout/fragment_weight" >
         <action
-            android:id="@+id/action_weightFragment_to_focusAreaFragment"
+            android:id="@+id/action_weightFragment_to_ageFragment"
+            app:destination="@id/ageFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/ageFragment"
+        android:name="com.musclesOS.adil.ui.onboarding.fragment.AgeFragment"
+        android:label="fragment_age"
+        tools:layout="@layout/fragment_age" >
+        <action
+            android:id="@+id/action_ageFragment_to_focusAreaFragment"
             app:destination="@id/focusAreaFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
     </fragment>
     <fragment

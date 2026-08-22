@@ -18,6 +18,13 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         _binding = FragmentWelcomeBinding.bind(view)
 
         initClickListeners()
+        applyPremiumAnimations()
+    }
+
+    private fun applyPremiumAnimations() {
+        binding.button3.alpha = 0f
+        binding.button3.translationY = 30f
+        binding.button3.animate().alpha(1f).translationY(0f).setDuration(600).setStartDelay(300).start()
     }
 
     private fun initClickListeners() {

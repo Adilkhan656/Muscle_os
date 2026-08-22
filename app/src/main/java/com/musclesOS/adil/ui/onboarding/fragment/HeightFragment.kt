@@ -29,15 +29,41 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
         setupUnitSelector()
         updateUnitChoice()
         initClickListener()
+        applyPremiumAnimations()
+    }
+
+    private fun applyPremiumAnimations() {
+        // Header animation
+        listOf(binding.header.backButton, binding.header.skip, binding.header.progress).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationX = -24f
+            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        }
+
+        // Title and Value animation
+        listOf(binding.title, binding.heightValue, binding.heightUnitGroup).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationX = -30f
+            view.animate().alpha(1f).translationX(0f).setDuration(500).setStartDelay(150 + (index * 50).toLong()).start()
+        }
+
+        // Scale and Hint animation
+        listOf(binding.heightScale, binding.hint).forEach { view ->
+            view.alpha = 0f
+            view.animate().alpha(1f).setDuration(800).setStartDelay(400).start()
+        }
+
+        // Button animation
+        binding.button3.alpha = 0f
+        binding.button3.animate().alpha(1f).setDuration(500).setStartDelay(600).start()
     }
 
     private fun setupHeader() {
 
-        binding.header.progress.text = "2 of 5"
-
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_heightFragment_to_weightFragment) }
     }
 
     private fun setupScale() {
@@ -49,26 +75,8 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
             step = 0.1
             value = 175.0
 
-            vertical = true
-            inverted = false
-
             onValueChanged = { selected ->
                 updateHeightDisplay(selected)
-            }
-
-            valueFormatter = { raw ->
-                if (binding.ftIn.isChecked) {
-                    val feet = (raw / 12).toInt()
-                    val inches = raw - (feet * 12)
-                    
-                    if (abs(inches - inches.roundToInt()) < 0.01) {
-                        String.format(Locale.US, "%d' %d\"", feet, inches.roundToInt())
-                    } else {
-                        String.format(Locale.US, "%d' %.1f\"", feet, inches)
-                    }
-                } else {
-                    String.format(Locale.US, "%.0f", raw)
-                }
             }
         }
 
@@ -127,6 +135,8 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                 value
             )
 
+            binding.heightScale.displayText = binding.heightValue.text.toString()
+
         } else {
 
             val feet = (value / 12).toInt()
@@ -138,6 +148,7 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                 feet,
                 inches
             )
+            binding.heightScale.displayText = binding.heightValue.text.toString()
         }
     }
 
@@ -145,38 +156,30 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
 
         binding.cm.setBackgroundResource(
             if (binding.cm.isChecked) {
-                R.drawable.bg_onboarding_choice_selected
+                R.drawable.bg_measurement_toggle_selected
             } else {
-                R.drawable.bg_onboarding_choice
+                android.R.color.transparent
             }
         )
 
         binding.ftIn.setBackgroundResource(
             if (binding.ftIn.isChecked) {
-                R.drawable.bg_onboarding_choice_selected
+                R.drawable.bg_measurement_toggle_selected
             } else {
-                R.drawable.bg_onboarding_choice
+                android.R.color.transparent
             }
         )
 
         binding.cm.setTextColor(
             resources.getColor(
-                if (binding.cm.isChecked) {
-                    R.color.white
-                } else {
-                    R.color.text_main
-                },
+                R.color.text_main,
                 null
             )
         )
 
         binding.ftIn.setTextColor(
             resources.getColor(
-                if (binding.ftIn.isChecked) {
-                    R.color.white
-                } else {
-                    R.color.text_main
-                },
+                R.color.text_main,
                 null
             )
         )

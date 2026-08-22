@@ -21,13 +21,37 @@ private var _binding : FragmentGenderBinding?= null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGenderBinding.bind(view)
-        listOf(binding.backButton, binding.assessmentTitle, binding.progress).forEachIndexed { index, headerView ->
-            headerView.translationX = -24f
-            headerView.alpha = 0f
-            headerView.animate().translationX(0f).alpha(1f).setStartDelay((index * 70).toLong()).setDuration(280).start()
-        }
+        
         binding.backButton.setOnClickListener { requireActivity().finish() }
         initClicklistner()
+        applyPremiumAnimations()
+    }
+
+    private fun applyPremiumAnimations() {
+        // Header animation
+        listOf(binding.backButton, binding.assessmentTitle, binding.progress).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationX = -24f
+            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        }
+
+        // Title animation
+        binding.title.alpha = 0f
+        binding.title.translationX = -30f
+        binding.title.animate().alpha(1f).translationX(0f).setDuration(500).setStartDelay(150).start()
+
+        // Cards animation
+        listOf(binding.cardMale, binding.cardFemale).forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationY = 40f
+            view.animate().alpha(1f).translationY(0f).setDuration(600).setStartDelay(300 + (index * 100).toLong()).start()
+        }
+
+        // Bottom buttons animation
+        listOf(binding.skipButton, binding.button3).forEach { view ->
+            view.alpha = 0f
+            view.animate().alpha(1f).setDuration(500).setStartDelay(600).start()
+        }
     }
 
 private fun initClicklistner (){
