@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  fragment_focus_area.xml
-
-  Layout: photo on the left (its dots are added by Kotlin code, not
-  here), checklist rows on the right (also added by Kotlin code - one
-  row per MuscleOption). The Guideline controls the split point between
-  the two columns; move guide_percent to change how much width the
-  photo gets.
--->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main"
-    android:paddingHorizontal="16dp">
+    android:background="@color/bg_main">
 
     <include
         android:id="@+id/header"
-        layout="@layout/onboarding_header_height" />
+        layout="@layout/onboarding_measurement_header" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/work_sans"
         android:gravity="center"
-        android:text="What is your focus area?"
+        android:text="WHAT'S YOUR FOCUS AREA?"
         android:textColor="@color/text_main"
-        android:textSize="28sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,16 +30,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50" />
+        app:layout_constraintGuide_percent="0.58" />
 
-    <!-- Photo column. FrameLayout so dot Views can be added at raw
-         pixel positions computed from each MuscleOption's bias. -->
+    <!-- Photo column on the left - Filling entire left height -->
     <FrameLayout
         android:id="@+id/bodyImageContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintBottom_toTopOf="@id/button3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/columnSplit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title">
@@ -56,29 +46,39 @@
             android:id="@+id/bodyImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/body_front" />
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:paddingEnd="10dp"
+            android:src="@drawable/body_image"
+            tools:src="@drawable/body_image" />
 
-        <!-- Dot views get added here in code, one per MuscleOption
-             that has hasBodyDot = true. -->
-
+        <com.musclesOS.adil.ui.onboarding.BodyFocusOverlayView
+            android:id="@+id/bodyFocusOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
 
-    <!-- Checklist column. Rows get added here in code, one per
-         MuscleOption, in the same order as MuscleOptions.ALL. -->
-    <LinearLayout
-        android:id="@+id/optionsList"
+    <!-- Checklist column on the right - Centered vertically -->
+    <ScrollView
+        android:id="@+id/optionsScroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="28dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="12dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/columnSplit"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toTopOf="@id/bodyImageContainer"
+        app:layout_constraintVertical_bias="0.3">
 
-    <!-- On top of everything, draws the animated dashed lines. Touches
-         pass straight through to the dots/rows/button underneath. -->
+        <LinearLayout
+            android:id="@+id/optionsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <!-- On top of everything, draws the animated dashed lines -->
     <com.musclesOS.adil.ui.onboarding.CalloutOverlayView
         android:id="@+id/calloutOverlay"
         android:layout_width="match_parent"
@@ -88,14 +88,17 @@
 
     <TextView
         android:id="@+id/button3"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
         android:layout_marginBottom="34dp"
         android:background="@drawable/bg_onboarding_button"
         android:gravity="center"
         android:text="Next   →"
-        android:textColor="@color/btn_text"
-        android:textSize="19sp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

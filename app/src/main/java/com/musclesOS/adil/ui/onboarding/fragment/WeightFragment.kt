@@ -1,12 +1,16 @@
 package com.musclesOS.adil.ui.onboarding.fragment
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentWeightBinding
 import com.musclesOS.adil.utils.UnitConverter
+import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
 
 class WeightFragment : Fragment(R.layout.fragment_weight) {
@@ -32,10 +36,8 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
 
     private fun applyPremiumAnimations() {
         // Header animation
-        listOf(binding.header.backButton, binding.header.skip, binding.header.progress).forEachIndexed { index, view ->
-            view.alpha = 0f
-            view.translationX = -24f
-            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        listOf(binding.header.backButton, binding.header.progressTag, binding.header.progressBar).forEachIndexed { index, view ->
+            OnboardingAnimations.fadeInSlideIn(view, index)
         }
 
         // Title, Unit Group and Value animation
@@ -61,7 +63,11 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_weightFragment_to_ageFragment) }
+//        binding.header.skip.visibility = View.VISIBLE
+//        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_weightFragment_to_ageFragment) }
+
+        binding.header.progressTag.text = "3 of 6"
+        binding.header.progressBar.progress = 300
     }
 
     private fun setupInitialWeight() {
@@ -86,6 +92,10 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
             onValueChanged = { selected ->
 
                 updateWeightDisplay(selected)
+            }
+            
+            onReadoutClicked = {
+                showManualWeightDialog()
             }
         }
 
@@ -214,6 +224,31 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
                 R.id.action_weightFragment_to_ageFragment
             )
         }
+    }
+
+    private fun showManualWeightDialog() {
+        val input = EditText(requireContext())
+        input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        input.hint = "Enter weight"
+        
+        val currentWeight = binding.weightScale.value
+        input.setText(String.format(Locale.US, "%.1f", currentWeight))
+        input.setSelection(input.text.length)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Set Weight")
+            .setMessage("Enter your weight in ${if (binding.lbs.isChecked) "lbs" else "kg"}")
+            .setView(input)
+            .setPositiveButton("Set") { _, _ ->
+                val weightStr = input.text.toString()
+                val weight = weightStr.toDoubleOrNull()
+                if (weight != null) {
+                    binding.weightScale.value = weight
+                    updateWeightDisplay(weight)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     override fun onDestroyView() {

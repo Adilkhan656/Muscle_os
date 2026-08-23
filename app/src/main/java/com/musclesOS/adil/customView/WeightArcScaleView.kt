@@ -1,22 +1,19 @@
 package com.musclesOS.adil.customView
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.roundToInt
-import kotlin.math.sin
+import kotlin.math.*
+import java.util.Locale
 
 /** Curved, touch-driven weight dial used on the onboarding weight screen. */
-class WeightArcScaleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+class WeightArcScaleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    View(context, attrs) {
+    
     var minValue = 35.0
     var maxValue = 160.0
     var step = 0.1
@@ -27,94 +24,220 @@ class WeightArcScaleView @JvmOverloads constructor(context: Context, attrs: Attr
             if (abs(field - bounded) < .00001) return
             field = bounded
             onValueChanged?.invoke(field)
-            performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING)
+            
+            // Precise haptic feedback
+            val currentHapticStep = (field / 0.5).roundToInt()
+            if (currentHapticStep != lastHapticStep) {
+                lastHapticStep = currentHapticStep
+                performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING)
+            }
             invalidate()
         }
+        
     var unit = "kg"
-        set(newValue) { field = newValue; invalidate() }
+        set(newValue) {
+            field = newValue; invalidate()
+        }
     var onValueChanged: ((Double) -> Unit)? = null
+    var onReadoutClicked: (() -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { strokeCap = Paint.Cap.ROUND }
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
+    
+    private val majorTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+    private val boldTypeface = Typeface.create("sans-serif", Typeface.BOLD)
+    private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
+
     private var downX = 0f
     private var downValue = value
+    private var lastHapticStep = Int.MIN_VALUE
 
+    // Pre-allocated objects for smooth performance
+    private val arc1Rect = RectF()
+    private val arc2Rect = RectF()
+    private val plateRect = RectF()
+    private val chevronPath = Path()
+    private val accentColor = Color.rgb(249, 115, 22)
+
+    init {
+        isHapticFeedbackEnabled = true
+        // Enabled for soft shadows and smooth gradients
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        val centerX = w / 2f
+        val centerY = h * .80f
+        val radius = w * .78f
+        
+        val arc1Radius = radius * 1.0f
+        arc1Rect.set(centerX - arc1Radius, centerY - arc1Radius, centerX + arc1Radius, centerY + arc1Radius)
+        
+        val arc2Radius = radius * 1.07f
+        arc2Rect.set(centerX - arc2Radius, centerY - arc2Radius, centerX + arc2Radius, centerY + arc2Radius)
+        
+        plateRect.set(centerX - dp(112f), h * .52f, centerX + dp(112f), h * .70f)
+    }
+
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val w = width.toFloat()
         val h = height.toFloat()
         val centerX = w / 2f
-        val centerY = h * 1.08f
+        val centerY = h * .80f
         val radius = w * .78f
-        val accent = Color.rgb(249, 115, 22)
-        val arcRect = RectF(centerX - radius, centerY - radius, centerX + radius, centerY + radius)
+        val rOuter = radius * .93f
 
+        // 1. Draw Background Halos
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1.5f)
-        paint.color = Color.argb(75, 190, 190, 200)
-        canvas.drawArc(arcRect, 202f, 136f, false, paint)
-        val innerRect = RectF(centerX - radius * .83f, centerY - radius * .83f, centerX + radius * .83f, centerY + radius * .83f)
-        canvas.drawArc(innerRect, 207f, 126f, false, paint)
+        paint.strokeWidth = dp(1.4f)
+        paint.color = Color.argb(80, 170, 174, 185)
+        canvas.drawArc(arc1Rect, 204f, 132f, false, paint)
 
-        val visibleRange = 20.0
-        val tickStep = if (step <= .1) .5 else step
-        var tick = value - visibleRange
+        paint.strokeWidth = dp(1.1f)
+        paint.color = Color.argb(50, 170, 174, 185)
+        canvas.drawArc(arc2Rect, 210f, 120f, false, paint)
+
+        // 2. Draw Unified Tick Fan (Integer steps: 1kg per line)
+        val visibleRange = 25.0
+        val tickStep = 1.0 // Lines at 60, 61, 62...
+        
+        val lenMajor = dp(56f)   // 60, 70, 80...
+        val lenMedium = dp(42f)  // 65, 75, 85...
+        val lenMinor = dp(24f)   // 61, 62, 63...
+        
+        var tick = ((value - visibleRange) / tickStep).roundToInt() * tickStep
         while (tick <= value + visibleRange) {
             if (tick >= minValue && tick <= maxValue) {
                 val offset = tick - value
                 val angle = 270.0 + offset * 2.7
+                
                 if (angle in 202.0..338.0) {
-                    val major = abs(tick % 10.0) < .02 || abs(tick % 10.0 - 10) < .02
-                    val selected = abs(offset) < tickStep / 2
-                    val length = when { selected -> 78f; major -> 55f; else -> 29f }
-                    paint.strokeWidth = dp(if (major || selected) 3.4f else 2f)
-                    paint.color = when { selected -> accent; major -> Color.rgb(224, 224, 232); else -> Color.rgb(130, 130, 145) }
+                    val isMajor = abs(tick % 10.0) < .001
+                    val isFive = abs(tick % 5.0) < .001 && !isMajor
+                    
+                    val length = when {
+                        isMajor -> lenMajor
+                        isFive -> lenMedium
+                        else -> lenMinor
+                    }
+                    
+                    paint.strokeWidth = dp(if (isMajor) 3.5f else if (isFive) 2.2f else 1.2f)
+                    paint.color = when {
+                        isMajor -> Color.rgb(230, 231, 239)
+                        isFive -> Color.rgb(200, 200, 215)
+                        else -> Color.rgb(130, 130, 145)
+                    }
+                    
                     val rad = angle * PI / 180.0
-                    val rOuter = radius * .93f
-                    val x1 = centerX + cos(rad).toFloat() * rOuter
-                    val y1 = centerY + sin(rad).toFloat() * rOuter
-                    val x2 = centerX + cos(rad).toFloat() * (rOuter - dp(length))
-                    val y2 = centerY + sin(rad).toFloat() * (rOuter - dp(length))
-                    canvas.drawLine(x1, y1, x2, y2, paint)
-                    if (major) {
-                        textPaint.color = Color.rgb(190, 190, 202)
-                        textPaint.textSize = dp(17f)
-                        textPaint.typeface = android.graphics.Typeface.create("sans-serif-medium", 0)
-                        val labelR = rOuter - dp(length + 23f)
-                        canvas.drawText(tick.roundToInt().toString(), centerX + cos(rad).toFloat() * labelR, centerY + sin(rad).toFloat() * labelR + dp(6f), textPaint)
+                    val cosA = cos(rad).toFloat()
+                    val sinA = sin(rad).toFloat()
+                    
+                    canvas.drawLine(
+                        centerX + cosA * rOuter,
+                        centerY + sinA * rOuter,
+                        centerX + cosA * (rOuter - length),
+                        centerY + sinA * (rOuter - length),
+                        paint
+                    )
+
+                    // Draw Labels only for major (10s)
+                    if (isMajor) {
+                        textPaint.color = Color.rgb(205, 207, 218)
+                        textPaint.textSize = dp(18f)
+                        textPaint.typeface = majorTypeface
+                        val labelR = rOuter - dp(80f)
+                        canvas.drawText(
+                            tick.roundToInt().toString(),
+                            centerX + cosA * labelR,
+                            centerY + sinA * labelR + dp(7f),
+                            textPaint
+                        )
                     }
                 }
             }
             tick += tickStep
         }
 
-        // Selected marker and readout plate.
-        paint.color = accent
-        paint.strokeWidth = dp(3f)
-        canvas.drawLine(centerX, h * .26f, centerX, h * .53f, paint)
+        // 3. Draw Center Indicator (Chevron)
+        val chevronVertexY = centerY - (radius * 1.07f) - dp(18f)
+        val topOfTicks = centerY - rOuter
+        
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = dp(2.6f)
+        paint.color = accentColor
+        canvas.drawLine(centerX, chevronVertexY, centerX, topOfTicks, paint)
+
+        val chevronHalfWidth = dp(9f)
+        val chevronHeight = dp(8f)
+        chevronPath.reset()
+        chevronPath.moveTo(centerX - chevronHalfWidth, chevronVertexY - chevronHeight)
+        chevronPath.lineTo(centerX, chevronVertexY)
+        chevronPath.lineTo(centerX + chevronHalfWidth, chevronVertexY - chevronHeight)
+        canvas.drawPath(chevronPath, paint)
+
+        // 4. Draw Readout Plate
         paint.style = Paint.Style.FILL
-        canvas.drawCircle(centerX, h * .26f, dp(5f), paint)
-        val plate = RectF(centerX - dp(112f), h * .62f, centerX + dp(112f), h * .80f)
-        paint.color = Color.argb(235, 25, 25, 30)
-        canvas.drawRoundRect(plate, dp(30f), dp(30f), paint)
-        textPaint.typeface = android.graphics.Typeface.create("sans-serif", 1)
+        paint.color = Color.rgb(24, 25, 31)
+        paint.setShadowLayer(dp(14f), 0f, dp(6f), Color.argb(90, 0, 0, 0))
+        canvas.drawRoundRect(plateRect, dp(30f), dp(30f), paint)
+        paint.clearShadowLayer()
+
+        textPaint.typeface = boldTypeface
         textPaint.textSize = dp(45f)
         textPaint.color = Color.WHITE
-        canvas.drawText(String.format(java.util.Locale.US, "%.1f", value), centerX - dp(15f), h * .725f, textPaint)
-        textPaint.typeface = android.graphics.Typeface.create("sans-serif", 0)
+        canvas.drawText(
+            String.format(Locale.US, "%.1f", value),
+            centerX - dp(15f),
+            h * .625f,
+            textPaint
+        )
+        
+        textPaint.typeface = regularTypeface
         textPaint.textSize = dp(20f)
         textPaint.color = Color.rgb(175, 175, 190)
-        canvas.drawText(unit, centerX + dp(72f), h * .725f, textPaint)
+        canvas.drawText(unit, centerX + dp(72f), h * .625f, textPaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> { downX = event.x; downValue = value; parent.requestDisallowInterceptTouchEvent(true); return true }
-            MotionEvent.ACTION_MOVE -> { value = downValue + ((event.x - downX) / dp(8f)) * step; return true }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> { parent.requestDisallowInterceptTouchEvent(false); performClick(); return true }
+            MotionEvent.ACTION_DOWN -> {
+                downX = event.x
+                downValue = value
+                parent.requestDisallowInterceptTouchEvent(true)
+                return true
+            }
+            // Handled Scroll Speed: 15dp per 1.0kg movement
+            // This makes it zip from 60 to 70 with a natural swipe.
+            MotionEvent.ACTION_MOVE -> {
+                val deltaX = event.x - downX
+                value = downValue + (deltaX / dp(15f))
+                return true
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                val upX = event.x
+                val upY = event.y
+                
+                // If it was a tap on the readout plate, trigger callback
+                if (abs(upX - downX) < dp(5f) && plateRect.contains(upX, upY)) {
+                    onReadoutClicked?.invoke()
+                }
+
+                parent.requestDisallowInterceptTouchEvent(false)
+                performClick()
+                return true
+            }
         }
         return true
     }
-    override fun performClick(): Boolean { super.performClick(); return true }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
     private fun dp(value: Float) = value * resources.displayMetrics.density
 }

@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-
-    <!-- Dark mode overrides -->
-    <color name="bg_main">#000000</color>
+    <color name="bg_main">#0B0C0E</color>
     <color name="text_main">#FFFFFF</color>
-    <color name="text_sub">#E0E0E0</color>
-    <color name="text_hint">#B0B0B0</color>
-    <color name="text_field">#E0E0E0</color>
-
+    <color name="text_sub">#BABBBE</color>
+    <color name="text_hint">#8E939D</color>
+    <color name="text_field">#E2E4E9</color>
+    <color name="wave_color">#0B0C0E</color>
     <color name="btn_bg">#FFFFFF</color>
-    <color name="btn_text">#000000</color>
-    <color name="wave_color">#1E1E1E</color>
-    <color name="field_bg">#1E1E1E</color>
-    <color name="social_bg">#1E1E1E</color>
-    <color name="social_stroke">#333333</color>
+    <color name="btn_text">#111214</color>
 
-    <color name="scrim_start">#90000000</color>
-    <color name="scrim_end">#FF000000</color>
+    <color name="field_bg">#1A1C20</color>
+    <color name="social_bg">#1A1C20</color>
+    <color name="social_stroke">#393C43</color>
 
-    <color name="ripple_primary">#1A000000</color>
-    <color name="ripple_social">#40FFFFFF</color>
+    <color name="scrim_start">#900B0C0E</color>
+    <color name="scrim_end">#0B0C0E</color>
 
-    <!-- More vibrant orange for dark mode -->
-    <color name="orange_primary">#FF8C3A</color>
-    <color name="orange_vibrant">#FF7F50</color>
+    <color name="tag_bg">#FFFFFF</color>
+    <color name="tag_text">#000000</color>
+
+    <color name="skip_bg">#2D1A0A</color>
 </resources>

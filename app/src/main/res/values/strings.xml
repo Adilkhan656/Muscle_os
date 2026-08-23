@@ -43,4 +43,11 @@
     <string name="continue_as_guest">Continue as Guest</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="forgot_password_headline">Forgot Password</string>
+    <string name="forgot_password_subheadline">Enter your email to receive a reset link</string>
+    <string name="back_to_login">Back to Sign In</string>
+    <string name="logout_dialog_title">Exit Onboarding?</string>
+    <string name="logout_dialog_message">Are you sure you want to stop and return to the login screen?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

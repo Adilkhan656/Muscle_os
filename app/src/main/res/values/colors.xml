@@ -25,4 +25,11 @@
 
     <color name="ripple_primary">#40FFFFFF</color>
     <color name="ripple_social">#1A000000</color>
+    <color name="premium_text">#F2F3F8</color>
+    <color name="premium_muted">#A6AAB6</color>
+    <color name="premium_line">#3A3D46</color>
+
+    <color name="tag_bg">#111214</color>
+    <color name="tag_text">#FFFFFF</color>
+    <color name="skip_bg">#FFEDD5</color>
 </resources>

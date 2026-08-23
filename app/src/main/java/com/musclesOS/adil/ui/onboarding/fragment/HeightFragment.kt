@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentHeightBinding
 import com.musclesOS.adil.utils.UnitConverter
+import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -34,10 +35,8 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
 
     private fun applyPremiumAnimations() {
         // Header animation
-        listOf(binding.header.backButton, binding.header.skip, binding.header.progress).forEachIndexed { index, view ->
-            view.alpha = 0f
-            view.translationX = -24f
-            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        listOf(binding.header.backButton, binding.header.progressTag, binding.header.progressBar).forEachIndexed { index, view ->
+            OnboardingAnimations.fadeInSlideIn(view, index)
         }
 
         // Title and Value animation
@@ -63,7 +62,11 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_heightFragment_to_weightFragment) }
+//        binding.header.skip.visibility = View.VISIBLE
+//        binding.header.skip.setOnClickListener { findNavController().navigate(R.id.action_heightFragment_to_weightFragment) }
+
+        binding.header.progressTag.text = "2 of 6"
+        binding.header.progressBar.progress = 200
     }
 
     private fun setupScale() {
@@ -71,8 +74,12 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
         binding.heightScale.apply {
             maxValue = 220.0
             minValue = 120.0
+            
+            isCm = true
 
-            step = 0.1
+            // Half-centimetre increments preserve decimal height selection without
+            // making the ruler hypersensitive.
+            step = 0.5
             value = 175.0
 
             onValueChanged = { selected ->
@@ -98,9 +105,11 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                     UnitConverter.cmToInches(currentValue)
 
                 binding.heightScale.apply {
+                    isCm = false
                     maxValue = UnitConverter.cmToInches(220.0)
                     minValue = UnitConverter.cmToInches(120.0)
 
+                    // Feet/inches retains the original tenth-inch precision.
                     step = 0.1
                     value = converted
                 }
@@ -112,10 +121,11 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                     UnitConverter.inchesToCm(currentValue)
 
                 binding.heightScale.apply {
+                    isCm = true
                     maxValue = 220.0
                     minValue = 120.0
 
-                    step = 0.1
+                    step = 0.5
                     value = converted
                 }
             }
@@ -135,8 +145,6 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                 value
             )
 
-            binding.heightScale.displayText = binding.heightValue.text.toString()
-
         } else {
 
             val feet = (value / 12).toInt()
@@ -148,7 +156,6 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                 feet,
                 inches
             )
-            binding.heightScale.displayText = binding.heightValue.text.toString()
         }
     }
 

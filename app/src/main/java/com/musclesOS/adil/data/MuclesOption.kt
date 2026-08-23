@@ -3,34 +3,100 @@ package com.musclesOS.adil.data
 /**
  * MuscleOption.kt
  *
- * One selectable focus-area option. It always shows as a row in the list
- * on the right. If hasBodyDot = true, it ALSO gets a tappable dot on the
- * photo, connected to its row by an animated line.
- *
- * xBias / yBias work like ConstraintLayout bias: 0.0 = left/top edge of
- * the photo, 1.0 = right/bottom edge, 0.5 = center. To move a dot,
- * change these two numbers and rerun the app.
- *
- * TO ADD A NEW MUSCLE: just add one more line to the ALL list below.
- * No XML editing needed - the row and (if applicable) the dot are both
- * generated automatically from this list.
+ * xBias / yBias: 0.0 (Left/Top) to 1.0 (Right/Bottom).
+ * glowScale: Size of the blur (e.g. 1.5 for big area, 0.7 for small).
  */
 data class MuscleOption(
     val id: String,
     val displayName: String,
     val hasBodyDot: Boolean = true,
     val xBias: Float = 0.5f,
-    val yBias: Float = 0.5f
+    val yBias: Float = 0.5f,
+    val glowScale: Float = 1.0f,
+    val hScale: Float = 1.0f,
+    val vScale: Float = 1.0f
 )
 
 object MuscleOptions {
+
     val ALL = listOf(
-        MuscleOption(id = "full_body", displayName = "Full body", hasBodyDot = false),
-        MuscleOption(id = "back", displayName = "Back", hasBodyDot = false),
-        MuscleOption(id = "chest", displayName = "Chest", xBias = 0.52f, yBias = 0.34f),
-        MuscleOption(id = "arms", displayName = "Arms", xBias = 0.18f, yBias = 0.43f),
-        MuscleOption(id = "abs", displayName = "Abs", xBias = 0.50f, yBias = 0.57f),
-        MuscleOption(id = "glutes", displayName = "Butt", hasBodyDot = false),
-        MuscleOption(id = "legs", displayName = "Legs", xBias = 0.48f, yBias = 0.82f)
+
+        MuscleOption(
+            id = "full_body",
+            displayName = "Full body",
+            xBias = 0.50f,
+            yBias = 0.40f,
+            glowScale = 1.5f
+        ),
+
+        MuscleOption(
+            id = "back",
+            displayName = "Back",
+            xBias = 0.54f,
+            yBias = 0.20f,
+            glowScale = 1.2f,
+            hScale = 1.3f,
+            vScale = 0.8f
+        ),
+
+        MuscleOption(
+            id = "shoulders",
+            displayName = "Shoulders",
+            xBias = 0.44f,
+            yBias = 0.24f,
+            glowScale = 0.9f,
+            hScale = 1.4f,
+            vScale = 0.8f
+        ),
+
+        MuscleOption(
+            id = "chest",
+            displayName = "Chest",
+            xBias = 0.50f,
+            yBias = 0.28f,
+            glowScale = 2.0f,
+            hScale = 1.5f,
+            vScale = 0.9f
+        ),
+
+        MuscleOption(
+            id = "arms",
+            displayName = "Arms",
+            xBias = 0.44f,
+            yBias = 0.33f,
+            glowScale = 1.1f,
+            hScale = 0.7f,
+            vScale = 1.4f
+        ),
+
+        MuscleOption(
+            id = "abs",
+            displayName = "Abs",
+            xBias = 0.50f,
+            yBias = 0.37f,
+            glowScale = 1.2f,
+            hScale = 1.9f,
+            vScale = 1.9f
+        ),
+
+        MuscleOption(
+            id = "butt",
+            displayName = "Butt",
+            xBias = 0.55f,
+            yBias = 0.58f,
+            glowScale = 1.1f,
+            hScale = 1.4f,
+            vScale = 0.9f
+        ),
+
+        MuscleOption(
+            id = "legs",
+            displayName = "Legs",
+            xBias = 0.47f,
+            yBias = 0.59f,
+            glowScale = 1.4f,
+            hScale = 1.8f,
+            vScale = 1.5f
+        ),
     )
 }

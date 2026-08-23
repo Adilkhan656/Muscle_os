@@ -1,78 +1,151 @@
 package com.musclesOS.adil.ui.onboarding.fragment
 
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentGenderBinding
-
+import com.musclesOS.adil.ui.auth.LoginActivity
+import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class GenderFragment : Fragment(R.layout.fragment_gender) {
-private var _binding : FragmentGenderBinding?= null
-    private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
+    private var _binding: FragmentGenderBinding? = null
+    private val binding get() = _binding!!
+
+    private var selectedGender: Boolean? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGenderBinding.bind(view)
-        
-        binding.backButton.setOnClickListener { requireActivity().finish() }
-        initClicklistner()
+
+        setupHeader()
+        setupClickListeners()
         applyPremiumAnimations()
+
+        binding.header.backButton.setOnClickListener {
+            showExitDialog()
+        }
+    }
+
+    private fun showExitDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_custom_alert, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogView.findViewById<TextView>(R.id.btnNo).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.btnYes).setOnClickListener {
+            dialog.dismiss()
+            
+            // Actually sign out so LoginActivity doesn't redirect us back here
+            com.musclesOS.adil.repository.AuthRepository().signOut()
+            
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            requireActivity().finish()
+        }
+
+        dialog.show()
+        
+        // Set fixed width for the dialog
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = (resources.displayMetrics.density * 320).toInt()
+        dialog.window?.attributes = layoutParams
+    }
+
+    private fun setupHeader() {
+        binding.header.progressTag.text = "1 of 6"
+        binding.header.progressBar.progress = 100
+    }
+
+    private fun setupClickListeners() {
+        binding.cardMale.setOnClickListener { selectMale() }
+        binding.maleImage.setOnClickListener { selectMale() }
+
+        binding.cardFemale.setOnClickListener { selectFemale() }
+        binding.femaleImage.setOnClickListener { selectFemale() }
+
+        binding.skipButton.setOnClickListener {
+            findNavController().navigate(R.id.action_genderFragment_to_heightFragment)
+        }
+
+        binding.button3.setOnClickListener {
+            findNavController().navigate(R.id.action_genderFragment_to_heightFragment)
+        }
+    }
+
+    private fun selectMale() {
+        // Skip re-triggering the animation if male is already selected —
+        // this is what stops rapid repeat taps from queueing/cancelling
+        // the same animation over and over and looking like nothing happened.
+        if (selectedGender == true) return
+
+        selectedGender = true
+        updateVisuals()
+
+        OnboardingAnimations.selectGender(binding.cardMale, binding.maleImage)
+        OnboardingAnimations.deselectGender(binding.cardFemale, binding.femaleImage)
+    }
+
+    private fun selectFemale() {
+        if (selectedGender == false) return
+
+        selectedGender = false
+        updateVisuals()
+
+        OnboardingAnimations.selectGender(binding.cardFemale, binding.femaleImage)
+        OnboardingAnimations.deselectGender(binding.cardMale, binding.maleImage)
+    }
+
+    /**
+     * Updates card strokes instantly for immediate click feedback
+     */
+    private fun updateVisuals() {
+        val orange = resources.getColor(R.color.orange_primary, null)
+        val grayStroke = android.graphics.Color.parseColor("#DDD9E2")
+
+        binding.cardMale.strokeColor = if (selectedGender == true) orange else grayStroke
+        binding.cardMale.strokeWidth = if (selectedGender == true) 6 else 3
+
+        binding.cardFemale.strokeColor = if (selectedGender == false) orange else grayStroke
+        binding.cardFemale.strokeWidth = if (selectedGender == false) 6 else 3
     }
 
     private fun applyPremiumAnimations() {
-        // Header animation
-        listOf(binding.backButton, binding.assessmentTitle, binding.progress).forEachIndexed { index, view ->
-            view.alpha = 0f
-            view.translationX = -24f
-            view.animate().alpha(1f).translationX(0f).setDuration(300).setStartDelay((index * 50).toLong()).start()
+        listOf(
+            binding.header.backButton,
+            binding.header.assessmentTitle,
+            binding.header.progressTag,
+            binding.header.progressBar
+        ).forEachIndexed { index, view ->
+            OnboardingAnimations.fadeInSlideIn(view, index)
         }
 
-        // Title animation
-        binding.title.alpha = 0f
-        binding.title.translationX = -30f
-        binding.title.animate().alpha(1f).translationX(0f).setDuration(500).setStartDelay(150).start()
-
-        // Cards animation
-        listOf(binding.cardMale, binding.cardFemale).forEachIndexed { index, view ->
-            view.alpha = 0f
-            view.translationY = 40f
-            view.animate().alpha(1f).translationY(0f).setDuration(600).setStartDelay(300 + (index * 100).toLong()).start()
-        }
-
-        // Bottom buttons animation
-        listOf(binding.skipButton, binding.button3).forEach { view ->
-            view.alpha = 0f
-            view.animate().alpha(1f).setDuration(500).setStartDelay(600).start()
-        }
+        OnboardingAnimations.fadeInSlideUp(binding.title, 150)
+        OnboardingAnimations.animateGenderEntrance(binding.cardMale, binding.maleImage, 300)
+        OnboardingAnimations.animateGenderEntrance(binding.cardFemale, binding.femaleImage, 400)
+        OnboardingAnimations.fadeInSlideUp(binding.skipButton, 650)
+        OnboardingAnimations.fadeInSlideUp(binding.button3, 730)
     }
-
-private fun initClicklistner (){
-    fun select(male: Boolean) {
-        val selected = if (male) R.color.orange_primary else R.color.field_bg
-        val unselected = if (male) R.color.field_bg else R.color.orange_primary
-        binding.cardMale.setCardBackgroundColor(resources.getColor(selected, null))
-        binding.cardFemale.setCardBackgroundColor(resources.getColor(unselected, null))
-        binding.maleCheck.visibility = if (male) View.VISIBLE else View.GONE
-        binding.femaleCheck.visibility = if (male) View.GONE else View.VISIBLE
-    }
-    binding.cardMale.setOnClickListener { select(true) }
-    binding.cardFemale.setOnClickListener { select(false) }
-    binding.skipButton.setOnClickListener { findNavController().navigate(R.id.action_genderFragment_to_heightFragment) }
-    binding.button3.setOnClickListener {
-        findNavController().navigate(R.id.action_genderFragment_to_heightFragment)
-    }
-}
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

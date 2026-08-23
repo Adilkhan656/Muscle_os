@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.ui)
     implementation(libs.play.services.auth)

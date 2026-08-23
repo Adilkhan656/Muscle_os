@@ -47,12 +47,39 @@ class ForgetpasswordScreen : AppCompatActivity() {
             }
 
         }
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding.tvBackToLogin.setOnClickListener {
+            finish()
+        }
+        setupFieldFocusStates()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+    }
+
+    private fun setupFieldFocusStates() {
+        val focusedElevation = 4f * resources.displayMetrics.density
+
+        fun updateFieldFocus() {
+            val emailFocused = binding.etEmail.hasFocus()
+            binding.emailField.setBackgroundResource(
+                if (emailFocused) R.drawable.bg_figma_field_focused
+                else R.drawable.bg_figma_field
+            )
+            binding.emailField.elevation = if (emailFocused) focusedElevation else 0f
+        }
+
+        binding.emailField.setOnClickListener {
+            binding.etEmail.requestFocus()
+        }
+
+        binding.etEmail.setOnFocusChangeListener { _, _ ->
+            updateFieldFocus()
+        }
+
+        updateFieldFocus()
     }
     /**
      * Updates the UI to show or hide the loading state, dimming the background.

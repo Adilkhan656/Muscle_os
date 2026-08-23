@@ -1,15 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg_main" android:paddingStart="16dp" android:paddingEnd="16dp">
-    <ImageButton android:id="@+id/backButton" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginTop="60dp" android:background="@android:color/transparent" android:contentDescription="Back" android:padding="10dp" android:rotation="180" android:src="@drawable/ic_arrow_right" app:tint="@color/text_main" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-    <TextView android:id="@+id/assessmentTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:fontFamily="@font/work_sans" android:text="Assessment" android:textColor="@color/text_main" android:textSize="20sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="@id/backButton" app:layout_constraintStart_toEndOf="@id/backButton" app:layout_constraintTop_toTopOf="@id/backButton"/>
-    <TextView android:id="@+id/progress" android:layout_width="wrap_content" android:layout_height="32dp" android:background="@drawable/bg_onboarding_tag" android:gravity="center" android:paddingHorizontal="12dp" android:text="1 of 6" android:textColor="#2563EB" android:textSize="14sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="@id/backButton" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="@id/backButton"/>
-    <TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:fontFamily="@font/work_sans" android:gravity="center" android:text="What is your gender?" android:textColor="@color/text_main" android:textSize="30sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/backButton"/>
-    <com.google.android.material.card.MaterialCardView android:id="@+id/cardMale" android:layout_width="0dp" android:layout_height="144dp" android:layout_marginTop="48dp" app:cardBackgroundColor="@color/field_bg" app:cardCornerRadius="32dp" app:cardElevation="0dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/title">
-        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"><ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:alpha="0.85" android:contentDescription="Male" android:scaleType="centerCrop" android:src="@drawable/onboarding_male"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="16dp" android:fontFamily="@font/work_sans" android:text="♂  Male" android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"/><TextView android:id="@+id/maleCheck" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="bottom|start" android:layout_margin="16dp" android:background="@drawable/bg_onboarding_choice" android:gravity="center" android:text="✓" android:textColor="@color/orange_primary" android:visibility="gone"/></FrameLayout>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+
+    <!-- ======================================================== -->
+    <!-- HEADER -->
+    <!-- ======================================================== -->
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/onboarding_measurement_header" />
+
+
+    <!-- ======================================================== -->
+    <!-- TITLE -->
+    <!-- ======================================================== -->
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/work_sans"
+        android:gravity="center"
+        android:text="What is your gender?"
+        android:textColor="@color/text_main"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+
+    <!-- ======================================================== -->
+    <!-- GENDER CONTAINER -->
+    <!-- ======================================================== -->
+
+    <LinearLayout
+        android:id="@+id/genderContainer"
+        android:layout_width="0dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="45dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+
+        <!-- ==================================================== -->
+        <!-- MALE -->
+        <!-- ==================================================== -->
+
+        <FrameLayout
+            android:id="@+id/maleContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMale"
+                android:layout_width="match_parent"
+                android:layout_height="165dp"
+                android:layout_gravity="bottom"
+                app:cardBackgroundColor="@color/field_bg"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#DDD9E2"
+                app:strokeWidth="1dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <!-- Male Label -->
+
+                    <TextView
+                        android:id="@+id/maleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginBottom="18dp"
+                        android:fontFamily="@font/work_sans"
+                        android:text="♂  Male"
+                        android:textColor="@color/text_main"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+
+
+            <ImageView
+                android:id="@+id/maleImage"
+                android:layout_width="185dp"
+                android:layout_height="220dp"
+                android:layout_gravity="top|center_horizontal"
+                android:contentDescription="Male"
+                android:scaleType="fitCenter"
+                android:src="@drawable/onboarding_male"
+                android:translationX="2dp" />
+
+        </FrameLayout>
+
+
+        <!-- ==================================================== -->
+        <!-- FEMALE -->
+        <!-- ==================================================== -->
+
+        <FrameLayout
+            android:id="@+id/femaleContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFemale"
+                android:layout_width="match_parent"
+                android:layout_height="165dp"
+                android:layout_gravity="bottom"
+                app:cardBackgroundColor="@color/field_bg"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#DDD9E2"
+                app:strokeWidth="1dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <!-- Female Label -->
+
+                    <TextView
+                        android:id="@+id/femaleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginBottom="18dp"
+                        android:fontFamily="@font/work_sans"
+                        android:text="♀  Female"
+                        android:textColor="@color/text_main"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+            <ImageView
+                android:id="@+id/femaleImage"
+                android:layout_width="130dp"
+                android:layout_height="210dp"
+                android:layout_gravity="top|center_horizontal"
+                android:contentDescription="Female"
+                android:scaleType="fitCenter"
+                android:src="@drawable/onboarding_girl" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <!-- ======================================================== -->
+    <!-- PREFER NOT TO SAY -->
+    <!-- ======================================================== -->
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/skipButton"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="34dp"
+        app:cardBackgroundColor="@color/field_bg"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#E8E3DC"
+        app:strokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genderContainer">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <!-- Small subtle icon -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/work_sans"
+                android:text="◌"
+                android:textColor="@color/orange_primary"
+                android:textSize="22sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/work_sans"
+                android:text="Prefer not to say"
+                android:textColor="@color/text_main"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+
+            <!-- Arrow -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/work_sans"
+                android:text="→"
+                android:textColor="@color/orange_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
-    <com.google.android.material.card.MaterialCardView android:id="@+id/cardFemale" android:layout_width="0dp" android:layout_height="144dp" android:layout_marginTop="8dp" app:cardBackgroundColor="@color/field_bg" app:cardCornerRadius="32dp" app:cardElevation="0dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/cardMale">
-        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"><ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:alpha="0.85" android:contentDescription="Female" android:scaleType="centerCrop" android:src="@drawable/onboarding_female"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="16dp" android:fontFamily="@font/work_sans" android:text="♀  Female" android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"/><TextView android:id="@+id/femaleCheck" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="bottom|start" android:layout_margin="16dp" android:background="@drawable/bg_onboarding_choice" android:gravity="center" android:text="✓" android:textColor="@color/orange_primary" android:visibility="gone"/></FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
-    <TextView android:id="@+id/skipButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginTop="48dp" android:background="@drawable/bg_onboarding_skip" android:gravity="center" android:text="Prefer to skip, thanks!   ×" android:textColor="@color/orange_primary" android:textSize="16sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/cardFemale"/>
-    <TextView android:id="@+id/button3" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginBottom="34dp" android:background="@drawable/bg_onboarding_button" android:gravity="center" android:text="Continue   →" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <!-- ======================================================== -->
+    <!-- CONTINUE BUTTON -->
+    <!-- ======================================================== -->
+
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/bg_onboarding_button"
+        android:fontFamily="@font/work_sans"
+        android:gravity="center"
+        android:text="Continue   →"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg_main" android:paddingHorizontal="16dp">
-    <include android:id="@+id/header" layout="@layout/onboarding_header_height"/>
-    <TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:gravity="center" android:text="What’s your fitness goal/target?" android:textColor="@color/text_main" android:textSize="30sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/header"/>
-    <LinearLayout android:id="@+id/goals" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="48dp" android:orientation="vertical" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/title">
-        <TextView android:id="@+id/goalLose" style="@style/OnboardingChoice" android:text="◓  I wanna lose weight"/><TextView android:id="@+id/goalCoach" style="@style/OnboardingChoice" android:text="☻  I wanna try AI Coach"/><TextView android:id="@+id/goalBulk" style="@style/OnboardingChoice" android:text="⌁  I wanna get bulks"/><TextView android:id="@+id/goalEndurance" style="@style/OnboardingChoice" android:text="〽  I wanna gain endurance"/>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/goalRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Background -->
+    <View
+        android:id="@+id/backgroundPattern"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.20"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Header -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/onboarding_measurement_header" />
+
+    <!-- Title / Subtitle -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="@font/work_sans"
+        android:gravity="center"
+        android:text="Everything starts with a clear goal."
+        android:textColor="@color/text_main"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <!-- =============================== -->
+    <!-- FLOATING SELECTED GOAL AREA -->
+    <!-- =============================== -->
+
+    <LinearLayout
+        android:id="@+id/featuredRow"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="18dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle">
+
+        <View
+            android:id="@+id/slot1"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/slot2"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/slot3"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
-    <TextView android:id="@+id/button3" android:layout_width="0dp" android:layout_height="56dp" android:layout_marginBottom="34dp" android:background="@drawable/bg_onboarding_button" android:gravity="center" android:text="Continue   →" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <!-- =============================== -->
+    <!-- GOAL CIRCLES AT BOTTOM -->
+    <!-- =============================== -->
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/goalsGrid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:alignmentMode="alignMargins"
+        app:columnCount="3"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rowCount="2">
+
+        <!-- FAT LOSS -->
+        <include
+            android:id="@+id/goalFatLoss"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+        <!-- MUSCLE GAIN -->
+        <include
+            android:id="@+id/goalMuscleGain"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+        <!-- STRENGTH -->
+        <include
+            android:id="@+id/goalStrength"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+        <!-- ENDURANCE -->
+        <include
+            android:id="@+id/goalEndurance"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+        <!-- RECOMPOSITION -->
+        <include
+            android:id="@+id/goalRecomposition"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+        <!-- STAY FIT -->
+        <include
+            android:id="@+id/goalFitness"
+            layout="@layout/item_goal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+
+    <!-- =============================== -->
+    <!-- BOTTOM ACTION BAR -->
+    <!-- =============================== -->
+
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="28dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/bg_onboarding_tag"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:text="Other"
+                android:textColor="@color/tag_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etGoalDescription"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_goal_card"
+                android:hint="Describe Your Goal"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_main"
+                android:textColorHint="@color/text_hint"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button3"
+            android:layout_width="132dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="14dp"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/work_sans"
+            android:text="Next  →"
+            android:layout_marginTop="15dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:cornerRadius="22dp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

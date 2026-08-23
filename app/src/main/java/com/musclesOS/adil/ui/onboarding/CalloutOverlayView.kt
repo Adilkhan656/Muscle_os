@@ -41,10 +41,6 @@ class CalloutOverlayView @JvmOverloads constructor(
     private val activeLines = mutableMapOf<String, ActiveLine>()
     private val runningAnimators = mutableMapOf<String, ValueAnimator>()
 
-    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FF8A00")
-        style = Paint.Style.FILL
-    }
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#FF8A00")
         strokeWidth = 3f
@@ -86,13 +82,27 @@ class CalloutOverlayView @JvmOverloads constructor(
         invalidate()
     }
 
+    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#FF8A00")
+        style = Paint.Style.FILL
+    }
+    
+    private val dotStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        style = Paint.Style.STROKE
+        strokeWidth = 4f
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         activeLines.values.forEach { line ->
             val progress = line.progress.coerceIn(0f, 1f)
 
+            // Draw the tiny anchor circle on the body
             dotPaint.alpha = (progress * 255).toInt()
-            canvas.drawCircle(line.from.x, line.from.y, 8f, dotPaint)
+            dotStrokePaint.alpha = (progress * 255).toInt()
+            canvas.drawCircle(line.from.x, line.from.y, 10f, dotPaint)
+            canvas.drawCircle(line.from.x, line.from.y, 10f, dotStrokePaint)
 
             val curX = line.from.x + (line.to.x - line.from.x) * progress
             val curY = line.from.y + (line.to.y - line.from.y) * progress

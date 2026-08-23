@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentAgeBinding
+import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
 
 class AgeFragment : Fragment(R.layout.fragment_age) {
@@ -29,7 +30,8 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
 
     private fun setupHeader() {
 
-        binding.header.progress.text = "4 of 6"
+        binding.header.progressTag.text = "4 of 6"
+        binding.header.progressBar.progress = 400
 
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -66,6 +68,11 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
     }
 
     private fun applyPremiumAnimations() {
+        // Header animation
+        listOf(binding.header.backButton, binding.header.progressTag, binding.header.progressBar).forEachIndexed { index, view ->
+            OnboardingAnimations.fadeInSlideIn(view, index)
+        }
+
         // Slide up and fade in for the age value
         binding.ageDisplayContainer.alpha = 0f
         binding.ageDisplayContainer.translationY = 50f
