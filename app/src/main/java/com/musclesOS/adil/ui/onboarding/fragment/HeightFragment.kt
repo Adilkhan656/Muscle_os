@@ -3,9 +3,11 @@ package com.musclesOS.adil.ui.onboarding.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentHeightBinding
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.UnitConverter
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
@@ -16,6 +18,8 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
 
     private var _binding: FragmentHeightBinding? = null
     private val binding get() = _binding!!
+
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     override fun onViewCreated(
         view: View,
@@ -77,9 +81,8 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
             
             isCm = true
 
-            // Half-centimetre increments preserve decimal height selection without
-            // making the ruler hypersensitive.
-            step = 0.5
+            // Whole-number increments for height
+            step = 1.0
             value = 175.0
 
             onValueChanged = { selected ->
@@ -125,7 +128,7 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
                     maxValue = 220.0
                     minValue = 120.0
 
-                    step = 0.5
+                    step = 1.0
                     value = converted
                 }
             }
@@ -195,6 +198,15 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
     private fun initClickListener() {
 
         binding.button3.setOnClickListener {
+
+            val heightValue = if (binding.cm.isChecked) {
+                binding.heightScale.value.toInt()
+            } else {
+                // If in ft/in, we should convert the current value (which is in inches) to cm first
+                UnitConverter.inchesToCm(binding.heightScale.value).toInt()
+            }
+
+            onboardingViewModel.updateHeight(heightValue)
 
             findNavController().navigate(
                 R.id.action_heightFragment_to_weightFragment

@@ -9,17 +9,21 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.data.MuscleOption
 import com.musclesOS.adil.data.MuscleOptions
 import com.musclesOS.adil.databinding.FragmentFocusAreaBinding
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
 
     private var _binding: FragmentFocusAreaBinding? = null
     private val binding get() = _binding!!
+
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     private val selectedIds = mutableSetOf<String>()
     private val rowViews = mutableMapOf<String, View>()
@@ -43,6 +47,7 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
         binding.bodyImageContainer.post { configureBodyOverlay() }
 
         binding.button3.setOnClickListener {
+            onboardingViewModel.updateFocusAreas(selectedIds.toList())
             findNavController().navigate(R.id.action_focusAreaFragment_to_goalFragment)
         }
         applyPremiumAnimations()

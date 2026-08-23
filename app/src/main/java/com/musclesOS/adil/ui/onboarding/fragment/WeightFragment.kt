@@ -6,9 +6,11 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentWeightBinding
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.UnitConverter
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
@@ -17,6 +19,8 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
 
     private var _binding: FragmentWeightBinding? = null
     private val binding get() = _binding!!
+
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     override fun onViewCreated(
         view: View,
@@ -219,6 +223,14 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
     private fun initClickListener() {
 
         binding.button3.setOnClickListener {
+
+            val weightValue = if (binding.kg.isChecked) {
+                binding.weightScale.value
+            } else {
+                UnitConverter.lbToKg(binding.weightScale.value)
+            }
+
+            onboardingViewModel.updateWeight(weightValue)
 
             findNavController().navigate(
                 R.id.action_weightFragment_to_ageFragment

@@ -3,9 +3,11 @@ package com.musclesOS.adil.ui.onboarding.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentAgeBinding
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
 
@@ -13,6 +15,8 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
 
     private var _binding: FragmentAgeBinding? = null
     private val binding get() = _binding!!
+
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     override fun onViewCreated(
         view: View,
@@ -115,6 +119,10 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
     private fun initClickListener() {
 
         binding.button3.setOnClickListener {
+
+            onboardingViewModel.updateAge(
+                binding.ageScale.value.toInt()
+            )
 
             findNavController().navigate(
                 R.id.action_ageFragment_to_focusAreaFragment

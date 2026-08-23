@@ -10,10 +10,13 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.databinding.FragmentGenderBinding
 import com.musclesOS.adil.ui.auth.LoginActivity
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class GenderFragment : Fragment(R.layout.fragment_gender) {
@@ -21,6 +24,9 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
     private var _binding: FragmentGenderBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: OnboardingViewModel by activityViewModels {
+        OnboardingViewModelProvider.provideFactory(requireContext())
+    }
     private var selectedGender: Boolean? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,6 +35,7 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
 
         setupHeader()
         setupClickListeners()
+        restoreSelection()
         applyPremiumAnimations()
 
         binding.header.backButton.setOnClickListener {
@@ -90,6 +97,13 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
         }
     }
 
+    private fun restoreSelection() {
+        when (viewModel.userProfile.value.gender) {
+            "male" -> selectMale()
+            "female" -> selectFemale()
+        }
+    }
+
     private fun selectMale() {
         // Skip re-triggering the animation if male is already selected —
         // this is what stops rapid repeat taps from queueing/cancelling
@@ -97,6 +111,7 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
         if (selectedGender == true) return
 
         selectedGender = true
+        viewModel.updateGender("male")
         updateVisuals()
 
         OnboardingAnimations.selectGender(binding.cardMale, binding.maleImage)
@@ -107,6 +122,7 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
         if (selectedGender == false) return
 
         selectedGender = false
+        viewModel.updateGender("female")
         updateVisuals()
 
         OnboardingAnimations.selectGender(binding.cardFemale, binding.femaleImage)

@@ -12,15 +12,19 @@ import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentGoalBinding
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class GoalFragment : Fragment(R.layout.fragment_goal) {
 
     private var _binding: FragmentGoalBinding? = null
     private val binding get() = _binding!!
+
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     private val selectedGoalIds = mutableListOf<String>()
 
@@ -431,6 +435,11 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
             if (selectedGoalIds.isEmpty()) {
                 return@setOnClickListener
             }
+
+            onboardingViewModel.updateGoals(selectedGoalIds.toList())
+            onboardingViewModel.updateCustomGoal(
+                binding.etGoalDescription.text.toString()
+            )
 
             findNavController().navigate(
                 R.id.action_goalFragment_to_finishFragment
