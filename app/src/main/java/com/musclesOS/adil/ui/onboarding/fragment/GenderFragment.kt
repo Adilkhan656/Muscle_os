@@ -105,10 +105,13 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
     }
 
     private fun selectMale() {
-        // Skip re-triggering the animation if male is already selected —
-        // this is what stops rapid repeat taps from queueing/cancelling
-        // the same animation over and over and looking like nothing happened.
-        if (selectedGender == true) return
+        if (selectedGender == true) {
+            selectedGender = null
+            viewModel.updateGender("")
+            updateVisuals()
+            OnboardingAnimations.deselectGender(binding.cardMale, binding.maleImage)
+            return
+        }
 
         selectedGender = true
         viewModel.updateGender("male")
@@ -119,7 +122,13 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
     }
 
     private fun selectFemale() {
-        if (selectedGender == false) return
+        if (selectedGender == false) {
+            selectedGender = null
+            viewModel.updateGender("")
+            updateVisuals()
+            OnboardingAnimations.deselectGender(binding.cardFemale, binding.femaleImage)
+            return
+        }
 
         selectedGender = false
         viewModel.updateGender("female")

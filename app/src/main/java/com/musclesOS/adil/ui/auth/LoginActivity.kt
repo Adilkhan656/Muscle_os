@@ -20,6 +20,8 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.R
+import com.musclesOS.adil.core.AppDestination
+import com.musclesOS.adil.core.AppInitializer
 import com.musclesOS.adil.databinding.ActivityLoginBinding
 import com.musclesOS.adil.model.AuthState
 import com.musclesOS.adil.model.FacebookAuthManager
@@ -433,17 +435,16 @@ requireInternet {
 
 
     private fun openMain() {
-
-        startActivity(
-            Intent(
-                this,
-//                MainActivity::class.java
-                OnboardingActivity::class.java
-            )
-        )
-
-        finish()
-
+        lifecycleScope.launch {
+            val destination = AppInitializer(this@LoginActivity).initialize()
+            val intent = when (destination) {
+                AppDestination.Main -> Intent(this@LoginActivity, MainActivity::class.java)
+                AppDestination.Onboarding -> Intent(this@LoginActivity, OnboardingActivity::class.java)
+                else -> Intent(this@LoginActivity, OnboardingActivity::class.java) // Fallback
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onStart() {

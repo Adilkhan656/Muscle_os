@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentWeightBinding
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.utils.UnitConverter
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
@@ -20,7 +21,9 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
     private var _binding: FragmentWeightBinding? = null
     private val binding get() = _binding!!
 
-    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels {
+        OnboardingViewModelProvider.provideFactory(requireContext())
+    }
 
     override fun onViewCreated(
         view: View,
@@ -90,7 +93,9 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
 
             step = 0.1
 
-            value = 62.0
+            val savedWeight = onboardingViewModel.userProfile.value.weightKg
+            value = if (savedWeight > 0.0) savedWeight else 62.0
+            
             unit = "kg"
 
             onValueChanged = { selected ->

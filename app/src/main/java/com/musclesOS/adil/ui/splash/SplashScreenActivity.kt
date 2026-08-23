@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.ui.WelcomeScreen
+import com.musclesOS.adil.ui.onboarding.activity.OnboardingActivity
 import com.musclesOS.adil.core.AppDestination
 import com.musclesOS.adil.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.launch
@@ -98,6 +99,9 @@ class SplashActivity : AppCompatActivity() {
                         putExtra("SHOW_WAVE", true)
                     }
                     AppDestination.Welcome -> Intent(this, WelcomeScreen::class.java).apply {
+                        putExtra("SHOW_WAVE", true)
+                    }
+                    AppDestination.Onboarding -> Intent(this, OnboardingActivity::class.java).apply {
                         putExtra("SHOW_WAVE", true)
                     }
                 }

@@ -10,10 +10,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.musclesOS.adil.MainActivity
+import com.musclesOS.adil.core.AppDestination
+import com.musclesOS.adil.core.AppInitializer
 import com.musclesOS.adil.databinding.ActivityVerifyEmailBinding
 import com.musclesOS.adil.model.AuthState
 import com.musclesOS.adil.repository.AuthRepository
 import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
+import com.musclesOS.adil.ui.onboarding.activity.OnboardingActivity
 import com.musclesOS.adil.utils.setLoadingState
 import kotlinx.coroutines.launch
 
@@ -56,15 +59,19 @@ class VerifyEmailActivity : AppCompatActivity() {
     }
 
     /**
-     * Navigates to the main activity after successful verification.
+     * Navigates to the appropriate activity after successful verification.
      */
     private fun openmain(){
-        startActivity(
-            Intent(
-                this@VerifyEmailActivity, MainActivity::class.java
-            )
-        )
-        finish()
+        lifecycleScope.launch {
+            val destination = AppInitializer(this@VerifyEmailActivity).initialize()
+            val intent = when (destination) {
+                AppDestination.Main -> Intent(this@VerifyEmailActivity, MainActivity::class.java)
+                AppDestination.Onboarding -> Intent(this@VerifyEmailActivity, OnboardingActivity::class.java)
+                else -> Intent(this@VerifyEmailActivity, OnboardingActivity::class.java)
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     /**

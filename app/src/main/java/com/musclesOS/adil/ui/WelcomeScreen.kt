@@ -13,11 +13,16 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.content.ContextCompat
 import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.R
+import com.musclesOS.adil.core.AppDestination
+import com.musclesOS.adil.core.AppInitializer
 import com.musclesOS.adil.ui.auth.LoginActivity
 import com.musclesOS.adil.ui.auth.RegisterScreen
+import com.musclesOS.adil.ui.onboarding.activity.OnboardingActivity
 import com.musclesOS.adil.databinding.ActivityWelcomeScreenBinding
 import com.musclesOS.adil.repository.AuthRepository
 import com.musclesOS.adil.ui.auth.viewmodel.AuthViewModel
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 /**
  * The initial screen shown to unauthenticated users.
@@ -104,19 +109,19 @@ class WelcomeScreen : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-     * Navigates to the MainActivity and finishes this screen.
+     * Navigates to the appropriate activity after successful login.
      */
     private fun openMain() {
-
-        startActivity(
-            Intent(
-                this,
-                MainActivity::class.java
-            )
-        )
-
-        finish()
-
+        lifecycleScope.launch {
+            val destination = AppInitializer(this@WelcomeScreen).initialize()
+            val intent = when (destination) {
+                AppDestination.Main -> Intent(this@WelcomeScreen, MainActivity::class.java)
+                AppDestination.Onboarding -> Intent(this@WelcomeScreen, OnboardingActivity::class.java)
+                else -> Intent(this@WelcomeScreen, OnboardingActivity::class.java)
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onStart() {

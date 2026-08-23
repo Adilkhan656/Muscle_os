@@ -2,6 +2,7 @@ package com.musclesOS.adil.ui.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.musclesOS.adil.data.UserProfile
 import com.musclesOS.adil.data.local.UserProfileEntity
 import com.musclesOS.adil.data.repository.UserProfileRepository
@@ -123,7 +124,6 @@ class OnboardingViewModel(
 
 
     fun saveOnboarding(
-        userId: String,
         onSuccess: () -> Unit = {},
         onError: (Exception) -> Unit = {}
     ) {
@@ -131,6 +131,9 @@ class OnboardingViewModel(
         viewModelScope.launch {
 
             try {
+
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                    ?: throw IllegalStateException("User not authenticated")
 
                 val profile =
                     _userProfile.value
@@ -177,11 +180,15 @@ class OnboardingViewModel(
                             System.currentTimeMillis()
                     )
 
-                repository.saveUserProfile(
+                val result = repository.saveUserProfile(
                     entity
                 )
 
-                onSuccess()
+                if (result.isSuccess) {
+                    onSuccess()
+                } else {
+                    onError(result.exceptionOrNull() as? Exception ?: Exception("Unknown error"))
+                }
 
             } catch (e: Exception) {
 

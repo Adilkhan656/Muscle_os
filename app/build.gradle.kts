@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.material)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.11.0")
     //fragment navigation
     val nav_version = "2.9.8" // Use the latest stable version
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")

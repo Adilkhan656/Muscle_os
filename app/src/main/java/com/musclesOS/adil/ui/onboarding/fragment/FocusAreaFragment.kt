@@ -16,6 +16,7 @@ import com.musclesOS.adil.data.MuscleOption
 import com.musclesOS.adil.data.MuscleOptions
 import com.musclesOS.adil.databinding.FragmentFocusAreaBinding
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
@@ -23,7 +24,9 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
     private var _binding: FragmentFocusAreaBinding? = null
     private val binding get() = _binding!!
 
-    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
+    private val viewModel: OnboardingViewModel by activityViewModels {
+        OnboardingViewModelProvider.provideFactory(requireContext())
+    }
 
     private val selectedIds = mutableSetOf<String>()
     private val rowViews = mutableMapOf<String, View>()
@@ -43,11 +46,12 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
         binding.header.backButton.setOnClickListener { findNavController().navigateUp() }
 
         buildChecklist()
+        restoreSavedFocusAreas()
 
         binding.bodyImageContainer.post { configureBodyOverlay() }
 
         binding.button3.setOnClickListener {
-            onboardingViewModel.updateFocusAreas(selectedIds.toList())
+            viewModel.updateFocusAreas(selectedIds.toList())
             findNavController().navigate(R.id.action_focusAreaFragment_to_goalFragment)
         }
         applyPremiumAnimations()
@@ -71,6 +75,31 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
             binding.optionsList.addView(row)
             rowViews[option.id] = row
         }
+    }
+
+    private fun restoreSavedFocusAreas() {
+        val savedFocusAreas = viewModel.userProfile.value.focusAreas
+
+        savedFocusAreas.forEach { savedId ->
+            MuscleOptions.ALL
+                .find { it.id == savedId }
+                ?.let { option ->
+                    selectedIds.add(option.id)
+
+                    val row = rowViews[option.id] ?: return@let
+
+                    row.setBackgroundResource(R.drawable.bg_option_row_selected)
+
+                    row.findViewById<TextView>(R.id.checkIcon).apply {
+                        text = "✓"
+                        setBackgroundResource(R.drawable.bg_checkbox_checked)
+                    }
+                }
+        }
+
+        binding.bodyFocusOverlay.setHighlights(
+            MuscleOptions.ALL.filter { selectedIds.contains(it.id) }
+        )
     }
 
     private fun configureBodyOverlay() {

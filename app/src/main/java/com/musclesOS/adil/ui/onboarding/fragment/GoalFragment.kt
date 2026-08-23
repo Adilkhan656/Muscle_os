@@ -1,22 +1,23 @@
 package com.musclesOS.adil.ui.onboarding.fragment
 
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.musclesOS.adil.MainActivity
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentGoalBinding
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 
 class GoalFragment : Fragment(R.layout.fragment_goal) {
@@ -24,7 +25,9 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
     private var _binding: FragmentGoalBinding? = null
     private val binding get() = _binding!!
 
-    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
+    private val viewModel: OnboardingViewModel by activityViewModels {
+        OnboardingViewModelProvider.provideFactory(requireContext())
+    }
 
     private val selectedGoalIds = mutableListOf<String>()
 
@@ -82,6 +85,7 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
 
         setupHeader()
         setupGoals()
+        restoreSelection()
         setupContinueButton()
         handleKeyboardVisibility()
 
@@ -220,30 +224,7 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
         id: String,
         itemView: View
     ) {
-
         selectedGoalIds.add(id)
-
-        itemView.bringToFront()
-
-        val border =
-            itemView.findViewById<View>(
-                R.id.selectionBorder
-            )
-
-        val minus =
-            itemView.findViewById<View>(
-                R.id.minusContainer
-            )
-
-        border.animate()
-            .alpha(1f)
-            .setDuration(200)
-            .start()
-
-        minus.animate()
-            .alpha(1f)
-            .setDuration(200)
-            .start()
 
         moveGoalUp(
             id,
@@ -255,46 +236,11 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
         id: String,
         itemView: View
     ) {
-
         selectedGoalIds.remove(id)
 
         stopFloating(id)
 
-        val border =
-            itemView.findViewById<View>(
-                R.id.selectionBorder
-            )
-
-        val minus =
-            itemView.findViewById<View>(
-                R.id.minusContainer
-            )
-
-        border.animate()
-            .alpha(0f)
-            .setDuration(200)
-            .start()
-
-        minus.animate()
-            .alpha(0f)
-            .setDuration(200)
-            .start()
-
-        /*
-         * Return exactly to original position.
-         */
-        itemView.animate().cancel()
-
-        itemView.animate()
-            .translationX(0f)
-            .translationY(0f)
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(450)
-            .setInterpolator(
-                AccelerateDecelerateInterpolator()
-            )
-            .start()
+        OnboardingAnimations.animateGoalDeselection(itemView)
     }
 
     /*
@@ -357,26 +303,13 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
             val moveY =
                 targetCenterY - itemCenterY
 
-            itemView.animate().cancel()
-
-            itemView.animate()
-                .translationX(0f)
-                .translationY(moveY)
-                .scaleX(1.15f)
-                .scaleY(1.15f)
-                .setDuration(550)
-                .setInterpolator(
-                    OvershootInterpolator(0.6f)
+            OnboardingAnimations.animateGoalSelection(itemView, moveY) {
+                startFloating(
+                    id,
+                    itemView,
+                    moveY
                 )
-                .withEndAction {
-
-                    startFloating(
-                        id,
-                        itemView,
-                        moveY
-                    )
-                }
-                .start()
+            }
         }
     }
 
@@ -388,31 +321,9 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
         view: View,
         baseY: Float
     ) {
-
         stopFloating(id)
 
-        val animator =
-            ObjectAnimator.ofFloat(
-                view,
-                View.TRANSLATION_Y,
-                baseY,
-                baseY - 10f,
-                baseY
-            ).apply {
-
-                duration = 1800
-
-                repeatCount =
-                    ValueAnimator.INFINITE
-
-                repeatMode =
-                    ValueAnimator.RESTART
-
-                interpolator =
-                    AccelerateDecelerateInterpolator()
-
-                start()
-            }
+        val animator = OnboardingAnimations.createFloatingAnimator(view, baseY)
 
         floatingAnimators[id] = animator
     }
@@ -436,14 +347,56 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
                 return@setOnClickListener
             }
 
-            onboardingViewModel.updateGoals(selectedGoalIds.toList())
-            onboardingViewModel.updateCustomGoal(
+            viewModel.updateGoals(selectedGoalIds.toList())
+            viewModel.updateCustomGoal(
                 binding.etGoalDescription.text.toString()
             )
 
-            findNavController().navigate(
-                R.id.action_goalFragment_to_finishFragment
-            )
+            // Since FinishFragment is removed, we save and navigate to Home directly
+            saveAndNavigateToHome()
+        }
+    }
+
+    private fun saveAndNavigateToHome() {
+        // Disable button to prevent multiple clicks
+        binding.button3.isEnabled = false
+
+        // Mark onboarding completed in ViewModel
+        viewModel.markOnboardingCompleted()
+
+        // Save to database (Room + Firestore)
+        viewModel.saveOnboarding(
+            onSuccess = {
+                // Navigate to MainActivity
+                val intent = android.content.Intent(requireContext(), MainActivity::class.java).apply {
+                    flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                requireActivity().finish()
+            },
+            onError = { e ->
+                // Re-enable button on error
+                binding.button3.isEnabled = true
+                Toast.makeText(requireContext(), "Save failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        )
+    }
+
+    private fun restoreSelection() {
+        val savedGoals = viewModel.userProfile.value.goals
+        val savedCustomGoal = viewModel.userProfile.value.customGoal
+
+        if (savedGoals.isNotEmpty()) {
+            savedGoals.forEach { goalId ->
+                val index = goalData.indexOfFirst { it.id == goalId }
+                if (index != -1) {
+                    selectGoal(goalId, goalItems[index])
+                }
+            }
+        }
+
+        if (savedCustomGoal.isNotEmpty()) {
+            binding.etGoalDescription.setText(savedCustomGoal)
         }
     }
 
@@ -482,53 +435,16 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
     }
 
     private fun applyEntranceAnimations() {
-
-        listOf(
-            binding.header.backButton,
-            binding.header.progressTag,
-            binding.header.progressBar
-        ).forEachIndexed { index, view ->
-
-            OnboardingAnimations.fadeInSlideIn(
-                view,
-                index
-            )
-        }
-
-        binding.subtitle.alpha = 0f
-        binding.subtitle.translationY = -20f
-
-        binding.subtitle.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(500)
-            .setStartDelay(100)
-            .start()
-
-        goalItems.forEachIndexed { index, itemView ->
-
-            itemView.alpha = 0f
-            itemView.translationY = 40f
-
-            itemView.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(500)
-                .setStartDelay(
-                    200L + index * 60L
-                )
-                .start()
-        }
-
-        binding.bottomBar.alpha = 0f
-        binding.bottomBar.translationY = 30f
-
-        binding.bottomBar.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(500)
-            .setStartDelay(550)
-            .start()
+        OnboardingAnimations.applyGoalEntranceAnimations(
+            headers = listOf(
+                binding.header.backButton,
+                binding.header.progressTag,
+                binding.header.progressBar
+            ),
+            subtitle = binding.subtitle,
+            goalItems = goalItems,
+            bottomBar = binding.bottomBar
+        )
     }
 
     override fun onDestroyView() {

@@ -1,8 +1,12 @@
 package com.musclesOS.adil.utils.animation
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import com.musclesOS.adil.R
 
 object OnboardingAnimations {
 
@@ -102,5 +106,100 @@ object OnboardingAnimations {
             .setStartDelay(delay + 80)
             .setInterpolator(OvershootInterpolator(0.65f))
             .start()
+    }
+
+    fun applyGoalEntranceAnimations(
+        headers: List<View>,
+        subtitle: View,
+        goalItems: List<View>,
+        bottomBar: View
+    ) {
+        headers.forEachIndexed { index, view ->
+            fadeInSlideIn(view, index)
+        }
+
+        subtitle.alpha = 0f
+        subtitle.translationY = -20f
+        subtitle.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(500)
+            .setStartDelay(100)
+            .start()
+
+        goalItems.forEachIndexed { index, itemView ->
+            itemView.alpha = 0f
+            itemView.translationY = 40f
+            itemView.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(500)
+                .setStartDelay(200L + index * 60L)
+                .start()
+        }
+
+        bottomBar.alpha = 0f
+        bottomBar.translationY = 30f
+        bottomBar.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(500)
+            .setStartDelay(550)
+            .start()
+    }
+
+    fun animateGoalSelection(itemView: View, moveY: Float, onComplete: () -> Unit) {
+        itemView.bringToFront()
+
+        val border = itemView.findViewById<View>(R.id.selectionBorder)
+        val minus = itemView.findViewById<View>(R.id.minusContainer)
+
+        border.animate().alpha(1f).setDuration(200).start()
+        minus.animate().alpha(1f).setDuration(200).start()
+
+        itemView.animate().cancel()
+        itemView.animate()
+            .translationX(0f)
+            .translationY(moveY)
+            .scaleX(1.15f)
+            .scaleY(1.15f)
+            .setDuration(550)
+            .setInterpolator(OvershootInterpolator(0.6f))
+            .withEndAction { onComplete() }
+            .start()
+    }
+
+    fun animateGoalDeselection(itemView: View) {
+        val border = itemView.findViewById<View>(R.id.selectionBorder)
+        val minus = itemView.findViewById<View>(R.id.minusContainer)
+
+        border.animate().alpha(0f).setDuration(200).start()
+        minus.animate().alpha(0f).setDuration(200).start()
+
+        itemView.animate().cancel()
+        itemView.animate()
+            .translationX(0f)
+            .translationY(0f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(450)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .start()
+    }
+
+    fun createFloatingAnimator(view: View, baseY: Float): ObjectAnimator {
+        return ObjectAnimator.ofFloat(
+            view,
+            View.TRANSLATION_Y,
+            baseY,
+            baseY - 10f,
+            baseY
+        ).apply {
+            duration = 1800
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
     }
 }

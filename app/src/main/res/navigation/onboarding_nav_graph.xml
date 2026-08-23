@@ -55,9 +55,6 @@
         android:name="com.musclesOS.adil.ui.onboarding.fragment.GoalFragment"
         android:label="fragment_goal"
         tools:layout="@layout/fragment_goal" >
-        <action
-            android:id="@+id/action_goalFragment_to_finishFragment"
-            app:destination="@id/finishFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
     </fragment>
     <fragment
         android:id="@+id/focusAreaFragment"
@@ -68,9 +65,4 @@
             android:id="@+id/action_focusAreaFragment_to_goalFragment"
             app:destination="@id/goalFragment" app:enterAnim="@anim/onboarding_fade_in" app:exitAnim="@anim/onboarding_fade_out" />
     </fragment>
-    <fragment
-        android:id="@+id/finishFragment"
-        android:name="com.musclesOS.adil.ui.onboarding.fragment.FinishFragment"
-        android:label="fragment_finish"
-        tools:layout="@layout/fragment_finish" />
 </navigation>

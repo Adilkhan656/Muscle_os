@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.musclesOS.adil.R
 import com.musclesOS.adil.databinding.FragmentAgeBinding
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
+import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
 import java.util.Locale
 
@@ -16,7 +17,9 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
     private var _binding: FragmentAgeBinding? = null
     private val binding get() = _binding!!
 
-    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels {
+        OnboardingViewModelProvider.provideFactory(requireContext())
+    }
 
     override fun onViewCreated(
         view: View,
@@ -51,7 +54,8 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
 
             step = 1.0
 
-            value = 25.0
+            val savedAge = onboardingViewModel.userProfile.value.age
+            value = if (savedAge > 0) savedAge.toDouble() else 25.0
 
             vertical = true
             inverted = false
