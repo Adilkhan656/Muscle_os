@@ -3,9 +3,9 @@ package com.musclesOS.adil.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import android.view.animation.OvershootInterpolator
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,8 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = ContextCompat.getColor(this, com.musclesOS.adil.R.color.orange_primary)
-        window.navigationBarColor = ContextCompat.getColor(this, com.musclesOS.adil.R.color.orange_primary)
+        enableEdgeToEdge()
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
             isAppearanceLightNavigationBars = false

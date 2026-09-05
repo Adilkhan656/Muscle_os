@@ -74,7 +74,7 @@
 
     </LinearLayout>
 
-    <com.musclesOS.adil.customView.AssessmentScaleView
+    <com.musclesOS.adil.utils.customView.AssessmentScaleView
         android:id="@+id/ageScale"
         android:layout_width="240dp"
         android:layout_height="0dp"

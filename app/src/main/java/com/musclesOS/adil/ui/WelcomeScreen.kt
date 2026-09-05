@@ -1,7 +1,6 @@
 package com.musclesOS.adil.ui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -90,8 +89,6 @@ class WelcomeScreen : AppCompatActivity(), View.OnClickListener {
      * configures the system bars to remain orange/dark during the transition reveal.
      */
     private fun keepOrangeSystemBarsForReveal() {
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
             isAppearanceLightNavigationBars = false

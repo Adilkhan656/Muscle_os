@@ -77,9 +77,12 @@
         android:id="@+id/weightValue"
         android:layout_width="1dp"
         android:layout_height="1dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.musclesOS.adil.customView.WeightArcScaleView
+    <com.musclesOS.adil.utils.customView.WeightArcScaleView
         android:id="@+id/weightScale"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -94,7 +97,10 @@
         android:id="@+id/hint"
         android:layout_width="1dp"
         android:layout_height="1dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/button3"

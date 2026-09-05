@@ -1,4 +1,4 @@
-package com.musclesOS.adil.animation
+package com.musclesOS.adil.utils.animation
 
 /**
  * Legacy marker retained for binary/source compatibility with older lessons.

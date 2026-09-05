@@ -1,7 +1,6 @@
 package com.musclesOS.adil
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -66,8 +65,6 @@ class MainActivity : AppCompatActivity() {
      * Maintains the orange theme for system bars during the reveal transition.
      */
     private fun keepOrangeSystemBarsForReveal() {
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
             isAppearanceLightNavigationBars = false

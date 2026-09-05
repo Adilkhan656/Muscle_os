@@ -1,4 +1,4 @@
-package com.musclesOS.adil.customView
+package com.musclesOS.adil.utils.customView
 
 import android.content.Context
 import android.content.res.Configuration

@@ -78,6 +78,7 @@ dependencies {
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
 //lottie
     implementation("com.airbnb.android:lottie:6.6.7")
     implementation(libs.androidx.credentials)

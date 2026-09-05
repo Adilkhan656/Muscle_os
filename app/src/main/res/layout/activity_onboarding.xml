@@ -13,7 +13,7 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/onboarding_nav_graph" />
 
-    <com.musclesOS.adil.customView.WaveRevealView
+    <com.musclesOS.adil.utils.customView.WaveRevealView
         android:id="@+id/waveRevealView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
