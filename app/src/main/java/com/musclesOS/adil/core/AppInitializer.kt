@@ -27,7 +27,6 @@ class AppInitializer(
     }
 
     suspend fun initialize(): AppDestination {
-        // Safe to call more than once; Firebase returns its existing app instance.
         FirebaseApp.initializeApp(context.applicationContext)
 
         val user = authRepository.currentUser()
@@ -35,12 +34,9 @@ class AppInitializer(
             return AppDestination.Welcome
         }
 
-        // Keep OneSignal's user identity synchronized with Firebase.
-        // This also covers returning users who are restored directly into the app
-        // without passing through LoginActivity again.
-        OneSignalManager.login(user.uid)
+        // Keep OneSignal identity and reusable user properties synchronized with Firebase.
+        OneSignalManager.syncUser(user)
 
-        // User is logged in, check onboarding status
         return if (userProfileRepository.isOnboardingCompleted(user.uid)) {
             AppDestination.Main
         } else {
