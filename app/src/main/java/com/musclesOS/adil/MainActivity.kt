@@ -9,16 +9,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.doOnPreDraw
-import com.musclesOS.adil.ui.auth.LoginActivity
 import com.musclesOS.adil.databinding.ActivityMainBinding
 import com.musclesOS.adil.repository.AuthRepository
+import com.musclesOS.adil.ui.auth.LoginActivity
 
 /**
  * The main dashboard activity for the application.
  * Handles the authenticated user experience and overall app navigation.
  */
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.button2.setOnClickListener {
             AuthRepository().signOut()
+            OneSignalManager.logout()
 
             startActivity(
                 Intent(
