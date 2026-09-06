@@ -34,10 +34,12 @@ class AppInitializer(
             return AppDestination.Welcome
         }
 
-        // Keep OneSignal identity and reusable user properties synchronized with Firebase.
-        OneSignalManager.syncUser(user)
+        val onboardingCompleted = userProfileRepository.isOnboardingCompleted(user.uid)
 
-        return if (userProfileRepository.isOnboardingCompleted(user.uid)) {
+        // Keep OneSignal identity, user properties, and onboarding state synchronized with Firebase.
+        OneSignalManager.syncUser(user, onboardingCompleted)
+
+        return if (onboardingCompleted) {
             AppDestination.Main
         } else {
             AppDestination.Onboarding
