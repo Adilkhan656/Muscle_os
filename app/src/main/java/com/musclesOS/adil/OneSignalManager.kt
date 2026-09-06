@@ -3,9 +3,11 @@ package com.musclesOS.adil
 import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.onesignal.OneSignal
 import com.onesignal.user.subscriptions.IPushSubscriptionObserver
 import com.onesignal.user.subscriptions.PushSubscriptionChangedState
+import kotlinx.coroutines.launch
 
 /**
  * Centralized OneSignal integration for MuscleOS.
@@ -56,7 +58,9 @@ object OneSignalManager {
                         "Tap below to enable push notifications."
                 )
                 .setPositiveButton("Got it") { _, _ ->
-                    OneSignal.Notifications.requestPermission(true)
+                    activity.lifecycleScope.launch {
+                        OneSignal.Notifications.requestPermission(true)
+                    }
                 }
                 .setCancelable(false)
                 .show()
