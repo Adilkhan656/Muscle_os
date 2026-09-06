@@ -45,6 +45,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        OneSignalManager.promptNotificationPermissionIfDaily(this)
+    }
+
     /**
      * Executes the wave reveal animation when navigating from the Splash screen.
      */
