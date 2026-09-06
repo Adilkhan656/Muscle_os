@@ -132,6 +132,11 @@ class WelcomeScreen : AppCompatActivity(), View.OnClickListener {
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        com.musclesOS.adil.OneSignalManager.promptNotificationPermissionIfDaily(this)
+    }
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.btnGetStarted -> {

@@ -459,4 +459,9 @@ requireInternet {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        com.musclesOS.adil.OneSignalManager.promptNotificationPermissionIfDaily(this)
+    }
+
 }

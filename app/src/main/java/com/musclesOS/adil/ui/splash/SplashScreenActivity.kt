@@ -38,7 +38,7 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        OneSignalManager.observePushSubscription(this)
+
 
         playEntranceAnimation()
         observeState()

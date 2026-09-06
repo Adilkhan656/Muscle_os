@@ -52,4 +52,9 @@ class OnboardingActivity : AppCompatActivity() {
             isAppearanceLightNavigationBars = true
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        com.musclesOS.adil.OneSignalManager.promptNotificationPermissionIfDaily(this)
+    }
 }

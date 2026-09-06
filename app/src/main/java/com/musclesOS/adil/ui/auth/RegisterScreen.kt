@@ -254,4 +254,9 @@ class RegisterScreen : AppCompatActivity() {
 
         viewModel.register(email, password)
     }
+
+    override fun onResume() {
+        super.onResume()
+        com.musclesOS.adil.OneSignalManager.promptNotificationPermissionIfDaily(this)
+    }
 }
