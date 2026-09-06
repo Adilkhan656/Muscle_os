@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.musclesOS.adil.OneSignalManager
 import com.musclesOS.adil.data.local.AppDatabase
 import com.musclesOS.adil.data.remote.FirestoreUserProfileDataSource
 import com.musclesOS.adil.repository.AuthRepository
@@ -15,7 +16,7 @@ class AppInitializer(
 ) {
 
     private val authRepository by lazy { AuthRepository() }
-    
+
     private val userProfileRepository by lazy {
         val database = AppDatabase.getDatabase(context)
         val firestoreDataSource = FirestoreUserProfileDataSource(
@@ -33,6 +34,11 @@ class AppInitializer(
         if (user == null) {
             return AppDestination.Welcome
         }
+
+        // Keep OneSignal's user identity synchronized with Firebase.
+        // This also covers returning users who are restored directly into the app
+        // without passing through LoginActivity again.
+        OneSignalManager.login(user.uid)
 
         // User is logged in, check onboarding status
         return if (userProfileRepository.isOnboardingCompleted(user.uid)) {
