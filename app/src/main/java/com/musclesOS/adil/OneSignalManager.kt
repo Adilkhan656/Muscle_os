@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseUser
 import com.onesignal.OneSignal
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -16,6 +17,7 @@ object OneSignalManager {
 
     private const val APP_ID = "91f6f182-79a9-41ca-a760-6fa18d23deb0"
     private const val LAST_PROMPT_KEY = "last_notification_prompt_time"
+    private const val USER_NAME_TAG = "user_name"
 
     fun initialize(context: Context) {
         OneSignal.initWithContext(context.applicationContext, APP_ID)
@@ -27,12 +29,10 @@ object OneSignalManager {
      */
     fun promptNotificationPermissionIfDaily(activity: ComponentActivity) {
         if (OneSignal.Notifications.permission) return
-
         if (activity.isFinishing || activity.isDestroyed) return
 
         val preferences =
             activity.getSharedPreferences("onesignal", Context.MODE_PRIVATE)
-
         val lastPromptTime = preferences.getLong(LAST_PROMPT_KEY, 0L)
         val currentTime = System.currentTimeMillis()
 
@@ -49,7 +49,7 @@ object OneSignalManager {
                 .setTitle("Enable Notifications")
                 .setMessage(
                     "Stay on track with your fitness goals! " +
-                            "Enable notifications to receive workout reminders and progress updates."
+                        "Enable notifications to receive workout reminders and progress updates."
                 )
                 .setPositiveButton("Enable") { _, _ ->
                     activity.lifecycleScope.launch {
@@ -62,6 +62,25 @@ object OneSignalManager {
         }
     }
 
+    /**
+     * Synchronizes the authenticated Firebase user with OneSignal.
+     * Guest users are identified by Firebase UID but do not receive a name tag.
+     */
+    fun syncUser(user: FirebaseUser) {
+        login(user.uid)
+
+        if (user.isAnonymous) return
+
+        user.email
+            ?.takeIf { it.isNotBlank() }
+            ?.let { addEmail(it) }
+
+        user.displayName
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
+            ?.let { addTag(USER_NAME_TAG, it) }
+    }
+
     private fun isDifferentDay(
         lastTimeMs: Long,
         currentTimeMs: Long
@@ -69,13 +88,12 @@ object OneSignalManager {
         val lastCal = Calendar.getInstance().apply {
             timeInMillis = lastTimeMs
         }
-
         val currentCal = Calendar.getInstance().apply {
             timeInMillis = currentTimeMs
         }
 
         return lastCal.get(Calendar.YEAR) != currentCal.get(Calendar.YEAR) ||
-                lastCal.get(Calendar.DAY_OF_YEAR) != currentCal.get(Calendar.DAY_OF_YEAR)
+            lastCal.get(Calendar.DAY_OF_YEAR) != currentCal.get(Calendar.DAY_OF_YEAR)
     }
 
     fun login(externalId: String) {
@@ -96,9 +114,5 @@ object OneSignalManager {
 
     fun addTag(key: String, value: String) {
         OneSignal.User.addTag(key, value)
-    }
-
-    fun trackEvent(name: String) {
-        OneSignal.User.trackEvent(name)
     }
 }
