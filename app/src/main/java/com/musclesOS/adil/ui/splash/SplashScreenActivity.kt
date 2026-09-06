@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.musclesOS.adil.MainActivity
+import com.musclesOS.adil.OneSignalManager
 import com.musclesOS.adil.ui.WelcomeScreen
 import com.musclesOS.adil.ui.onboarding.activity.OnboardingActivity
 import com.musclesOS.adil.core.AppDestination
@@ -36,6 +37,8 @@ class SplashActivity : AppCompatActivity() {
         }
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        OneSignalManager.observePushSubscription(this)
 
         playEntranceAnimation()
         observeState()
