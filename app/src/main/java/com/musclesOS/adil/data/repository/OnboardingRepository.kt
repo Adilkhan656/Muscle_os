@@ -4,7 +4,6 @@ import com.musclesOS.adil.data.local.UserProfileDao
 import com.musclesOS.adil.data.local.UserProfileEntity
 import com.musclesOS.adil.data.remote.FirestoreUserProfileDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 
 class UserProfileRepository(
     private val userProfileDao: UserProfileDao,
@@ -20,7 +19,7 @@ class UserProfileRepository(
         return try {
             // Save to Room
             userProfileDao.insertOrUpdateProfile(userProfile)
-            
+
             // Save to Firestore
             firestoreDataSource.saveUserProfile(userProfile)
         } catch (e: Exception) {
@@ -51,30 +50,23 @@ class UserProfileRepository(
 
     /**
      * Checks whether the user has completed onboarding.
-     * Logic:
-     * 1. Check local Room database.
-     * 2. If Room has data and isOnboardingCompleted is true, return true.
-     * 3. If Room is empty, check Firestore.
-     * 4. If Firestore has data, sync it to Room and return its isOnboardingCompleted status.
-     * 5. Otherwise, return false.
+     *
+     * Firestore is the source of truth for onboarding completion.
+     * Room is used only as a local cache and must never override a
+     * remote incomplete state with an old local `true` value.
      */
     suspend fun isOnboardingCompleted(userId: String): Boolean {
-        // 1. Check local Room
-        val localProfile = userProfileDao.getUserProfile(userId).firstOrNull()
-        if (localProfile != null && localProfile.isOnboardingCompleted) {
-            return true
-        }
-
-        // 2. Room is empty or incomplete, check Firestore
+        // Always check Firestore first so stale Room data cannot mark
+        // onboarding as completed before the user actually completes it.
         val remoteResult = firestoreDataSource.fetchUserProfile(userId)
-        val remoteProfile = remoteResult.getOrNull()
 
-        if (remoteProfile != null) {
-            // Sync remote profile to local Room
+        remoteResult.getOrNull()?.let { remoteProfile ->
+            // Keep Room synchronized with the authoritative remote state.
             userProfileDao.insertOrUpdateProfile(remoteProfile)
             return remoteProfile.isOnboardingCompleted
         }
 
+        // No remote profile means onboarding has not been completed yet.
         return false
     }
 }
