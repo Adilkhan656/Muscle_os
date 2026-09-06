@@ -86,4 +86,8 @@ object OneSignalManager {
     fun addTag(key: String, value: String) {
         OneSignal.User.addTag(key, value)
     }
+
+    fun trackEvent(name: String, properties: Map<String, Any?> = emptyMap()) {
+        OneSignal.User.trackEvent(name, properties)
+    }
 }
