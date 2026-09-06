@@ -79,7 +79,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.messaging)
-//lottie
+    //lottie
     implementation("com.airbnb.android:lottie:6.6.7")
     implementation(libs.androidx.credentials)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
@@ -94,10 +94,14 @@ dependencies {
 
     implementation(libs.firebase.auth)
     implementation(libs.hilt.android)
-//    kapt(libs.hilt.compiler)
+    //    kapt(libs.hilt.compiler)
     implementation(libs.play.services.auth)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // OneSignal push notifications
+    implementation("com.onesignal:OneSignal:5.9.2")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
