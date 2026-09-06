@@ -35,9 +35,6 @@ object OneSignalManager {
 
         subscriptionObserver = observer
         OneSignal.User.pushSubscription.addObserver(observer)
-
-        // Also evaluate the current value immediately in case registration completed
-        // before the observer was attached.
         checkSubscription(activity, OneSignal.User.pushSubscription.id)
     }
 
@@ -87,7 +84,7 @@ object OneSignalManager {
         OneSignal.User.addTag(key, value)
     }
 
-    fun trackEvent(name: String, properties: Map<String, Any?> = emptyMap()) {
-        OneSignal.User.trackEvent(name, properties)
+    fun trackEvent(name: String) {
+        OneSignal.User.trackEvent(name)
     }
 }
