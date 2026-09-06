@@ -18,6 +18,7 @@ object OneSignalManager {
     private const val APP_ID = "91f6f182-79a9-41ca-a760-6fa18d23deb0"
     private const val LAST_PROMPT_KEY = "last_notification_prompt_time"
     private const val USER_NAME_TAG = "user_name"
+    private const val ONBOARDING_COMPLETED_TAG = "onboarding_completed"
 
     fun initialize(context: Context) {
         OneSignal.initWithContext(context.applicationContext, APP_ID)
@@ -63,11 +64,12 @@ object OneSignalManager {
     }
 
     /**
-     * Synchronizes the authenticated Firebase user with OneSignal.
+     * Synchronizes the authenticated Firebase user and onboarding state with OneSignal.
      * Guest users are identified by Firebase UID but do not receive a name tag.
      */
-    fun syncUser(user: FirebaseUser) {
+    fun syncUser(user: FirebaseUser, onboardingCompleted: Boolean) {
         login(user.uid)
+        addTag(ONBOARDING_COMPLETED_TAG, onboardingCompleted.toString())
 
         if (user.isAnonymous) return
 
