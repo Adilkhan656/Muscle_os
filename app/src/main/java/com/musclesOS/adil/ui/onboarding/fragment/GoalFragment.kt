@@ -120,8 +120,8 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
         viewModel.markOnboardingCompleted()
         viewModel.saveOnboarding(
             onSuccess = {
-                // Fire the event only after onboarding data has been saved successfully.
-                OneSignalManager.trackEvent("onboarding_completed")
+                // The free OneSignal plan uses a tag + segment for the onboarding Journey.
+                OneSignalManager.addTag("onboarding_completed", "true")
                 val intent = android.content.Intent(requireContext(), MainActivity::class.java).apply {
                     flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
