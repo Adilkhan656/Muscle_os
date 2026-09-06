@@ -97,10 +97,15 @@ class RegisterScreen : AppCompatActivity() {
         val focusedElevation = 4f * resources.displayMetrics.density
 
         fun updateFieldFocus() {
+            val nameFocused = binding.etName.hasFocus()
             val emailFocused = binding.etEmail.hasFocus()
             val passwordFocused = binding.etPassword.hasFocus()
             val confirmPasswordFocused = binding.etConfirmPassword.hasFocus()
 
+            binding.nameField.setBackgroundResource(
+                if (nameFocused) R.drawable.bg_figma_field_focused
+                else R.drawable.bg_figma_field
+            )
             binding.emailField.setBackgroundResource(
                 if (emailFocused) R.drawable.bg_figma_field_focused
                 else R.drawable.bg_figma_field
@@ -114,14 +119,17 @@ class RegisterScreen : AppCompatActivity() {
                 else R.drawable.bg_figma_field
             )
 
+            binding.nameField.elevation = if (nameFocused) focusedElevation else 0f
             binding.emailField.elevation = if (emailFocused) focusedElevation else 0f
             binding.passwordField.elevation = if (passwordFocused) focusedElevation else 0f
             binding.confirmPasswordField.elevation = if (confirmPasswordFocused) focusedElevation else 0f
         }
 
+        binding.nameField.setOnClickListener { binding.etName.requestFocus() }
         binding.emailField.setOnClickListener { binding.etEmail.requestFocus() }
         binding.passwordField.setOnClickListener { binding.etPassword.requestFocus() }
         binding.confirmPasswordField.setOnClickListener { binding.etConfirmPassword.requestFocus() }
+        binding.etName.setOnFocusChangeListener { _, _ -> updateFieldFocus() }
         binding.etEmail.setOnFocusChangeListener { _, _ -> updateFieldFocus() }
         binding.etPassword.setOnFocusChangeListener { _, _ -> updateFieldFocus() }
         binding.etConfirmPassword.setOnFocusChangeListener { _, _ -> updateFieldFocus() }
@@ -151,9 +159,15 @@ class RegisterScreen : AppCompatActivity() {
     }
 
     private fun registerUser() {
+        val name = binding.etName.text.toString().trim()
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
         val confirmPassword = binding.etConfirmPassword.text.toString().trim()
+
+        Validator.validateName(name)?.let {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            return
+        }
 
         Validator.validateEmail(email)?.let {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
@@ -170,6 +184,6 @@ class RegisterScreen : AppCompatActivity() {
             return
         }
 
-        viewModel.register(email, password)
+        viewModel.register(name, email, password)
     }
 }

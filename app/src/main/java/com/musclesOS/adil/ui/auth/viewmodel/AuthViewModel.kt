@@ -144,10 +144,10 @@ class AuthViewModel(private val repository: AuthRepository
     /**
      * Registers a new user with email and password and sends a verification email.
      */
-    fun register(email: String,password:String){
+    fun register(name: String, email: String, password: String){
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            repository.registerWithEmail(email,password).onSuccess {
+            repository.registerWithEmail(email, password, name).onSuccess {
                 repository.sendVerificationEmail()
                     .onSuccess {
 
@@ -201,13 +201,16 @@ class AuthViewModel(private val repository: AuthRepository
      * Signs in the user as an anonymous guest.
      */
     fun guestLogin() {
-
         viewModelScope.launch {
-
-            repository
-                .signInAnonymously().onSuccess {
+            _authState.value = AuthState.Loading
+            repository.signInAnonymously()
+                .onSuccess {
                     _authState.value =
                         AuthState.GuestLoginSuccess(it.uid)
+                }
+                .onFailure {
+                    _authState.value =
+                        AuthState.Error(it.message ?: "Unknown error")
                 }
         }
     }

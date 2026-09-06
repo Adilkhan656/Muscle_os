@@ -51,7 +51,8 @@ class AuthRepository {
      */
     suspend fun registerWithEmail(
         email: String,
-        password: String
+        password: String,
+        name: String
     ): Result<FirebaseUser> {
 
         return try {
@@ -62,9 +63,16 @@ class AuthRepository {
                     password
                 ).await()
 
-            Result.success(
-                result.user!!
-            )
+            val user = result.user!!
+            if (name.isNotBlank()) {
+                val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build()
+                user.updateProfile(profileUpdates).await()
+                user.reload().await()
+            }
+
+            Result.success(user)
 
         } catch (e: Exception) {
 
