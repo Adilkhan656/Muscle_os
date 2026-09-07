@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.musclesOS.adil.data.local.UserProfileEntity
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 
 class FirestoreUserProfileDataSource(
     private val firestore: FirebaseFirestore,
@@ -12,15 +13,21 @@ class FirestoreUserProfileDataSource(
 
     private companion object {
         const val USERS_COLLECTION = "users"
+        const val FIRESTORE_OPERATION_TIMEOUT_MS = 15_000L
     }
 
     suspend fun saveUserProfile(profile: UserProfileEntity): Result<Unit> {
         return try {
-
             val userId = auth.currentUser?.uid
                 ?: return Result.failure(
                     IllegalStateException("User is not authenticated")
                 )
+
+            if (userId != profile.userId) {
+                return Result.failure(
+                    IllegalStateException("Authenticated user does not match profile")
+                )
+            }
 
             val userData = hashMapOf(
                 "userId" to profile.userId,
@@ -38,14 +45,17 @@ class FirestoreUserProfileDataSource(
                 "updatedAt" to profile.updatedAt
             )
 
-            firestore
-                .collection(USERS_COLLECTION)
-                .document(userId)
-                .set(userData)
-                .await()
+            // Do not leave the onboarding screen waiting for minutes if Firestore
+            // cannot reach the backend. Fail fast and let the UI show the real error.
+            withTimeout(FIRESTORE_OPERATION_TIMEOUT_MS) {
+                firestore
+                    .collection(USERS_COLLECTION)
+                    .document(userId)
+                    .set(userData)
+                    .await()
+            }
 
             Result.success(Unit)
-
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -53,11 +63,13 @@ class FirestoreUserProfileDataSource(
 
     suspend fun fetchUserProfile(userId: String): Result<UserProfileEntity?> {
         return try {
-            val document = firestore
-                .collection(USERS_COLLECTION)
-                .document(userId)
-                .get()
-                .await()
+            val document = withTimeout(FIRESTORE_OPERATION_TIMEOUT_MS) {
+                firestore
+                    .collection(USERS_COLLECTION)
+                    .document(userId)
+                    .get()
+                    .await()
+            }
 
             if (!document.exists()) {
                 return Result.success(null)
