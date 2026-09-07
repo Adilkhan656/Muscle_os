@@ -117,15 +117,17 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
 
     private fun saveAndNavigateToHome() {
         binding.button3.isEnabled = false
-        viewModel.markOnboardingCompleted()
+
+        // Do not mark onboarding complete until the profile is actually persisted.
+        // The OneSignal tag is updated only after the Firestore save succeeds.
         viewModel.saveOnboarding(
             onSuccess = {
-                // The free OneSignal plan uses a tag + segment for the onboarding Journey.
                 OneSignalManager.addTag("onboarding_completed", "true")
                 val intent = android.content.Intent(requireContext(), MainActivity::class.java).apply {
                     flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
-                startActivity(intent); requireActivity().finish()
+                startActivity(intent)
+                requireActivity().finish()
             },
             onError = { e ->
                 binding.button3.isEnabled = true
