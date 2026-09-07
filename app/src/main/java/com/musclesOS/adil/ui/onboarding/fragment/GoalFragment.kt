@@ -122,7 +122,7 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
         // The OneSignal tag is updated only after the Firestore save succeeds.
         viewModel.saveOnboarding(
             onSuccess = {
-                OneSignalManager.addTag("onboarding_completed", "true")
+                OneSignalManager.completeOnboarding()
                 val intent = android.content.Intent(requireContext(), MainActivity::class.java).apply {
                     flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }

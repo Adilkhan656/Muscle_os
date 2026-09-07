@@ -26,10 +26,9 @@ class AuthViewModel(private val repository: AuthRepository
     fun signIn(idToken: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            repository.signInWithGoogle(idToken).onSuccess {
-                _authState.value =
-                    AuthState.GoogleLoginSuccess(it.uid)
-
+            repository.signInWithGoogle(idToken).onSuccess { user ->
+                OneSignalManager.syncUser(user, onboardingCompleted = false)
+                _authState.value = AuthState.GoogleLoginSuccess(user.uid)
             }.onFailure {
                 _authState.value = AuthState.Error(it.message ?: "Unknown error")
             }
@@ -92,16 +91,12 @@ class AuthViewModel(private val repository: AuthRepository
     fun facebookLogin(accessToken: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-
-            repository.signInWithFacebook(accessToken)
-                .onSuccess {
-                    _authState.value = AuthState.SignInWithFacebook(it.uid)
-                }
-                .onFailure {
-                    _authState.value = AuthState.Error(
-                        it.message ?: "Facebook Login Failed"
-                    )
-                }
+            repository.signInWithFacebook(accessToken).onSuccess { user ->
+                OneSignalManager.syncUser(user, onboardingCompleted = false)
+                _authState.value = AuthState.SignInWithFacebook(user.uid)
+            }.onFailure {
+                _authState.value = AuthState.Error(it.message ?: "Unknown error")
+            }
         }
     }
 
@@ -144,7 +139,8 @@ class AuthViewModel(private val repository: AuthRepository
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             repository.loginWithEmail(email, password)
-                .onSuccess {
+                .onSuccess { user ->
+                    OneSignalManager.syncUser(user, onboardingCompleted = true)
                     _authState.value = AuthState.LoginSuccess
                 }
                 .onFailure {
@@ -152,7 +148,6 @@ class AuthViewModel(private val repository: AuthRepository
                 }
         }
     }
-
     /**
      * Sends a password reset email to the specified user.
      */
