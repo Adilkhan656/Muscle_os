@@ -11,27 +11,32 @@ class UserProfileRepository(
 ) {
 
     /**
-     * Save or update the user's profile locally and in Firestore.
+     * Save or update the user's profile in Firestore first, then cache the
+     * confirmed remote state in Room.
      */
     suspend fun saveUserProfile(
         userProfile: UserProfileEntity
     ): Result<Unit> {
         return try {
-            // Save to Room
-            userProfileDao.insertOrUpdateProfile(userProfile)
+            val remoteResult = firestoreDataSource.saveUserProfile(userProfile)
 
-            // Save to Firestore
-            firestoreDataSource.saveUserProfile(userProfile)
+            if (remoteResult.isFailure) {
+                return Result.failure(
+                    remoteResult.exceptionOrNull()
+                        ?: Exception("Failed to save user profile")
+                )
+            }
+
+            // Only cache the profile after Firestore has confirmed the write.
+            userProfileDao.insertOrUpdateProfile(userProfile)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
     /**
-     * Observe the user's profile.
-     *
-     * Whenever Room data changes,
-     * the Flow will emit the updated profile.
+     * Observe the user's profile from the local Room cache.
      */
     fun getUserProfile(
         userId: String
@@ -50,23 +55,16 @@ class UserProfileRepository(
 
     /**
      * Checks whether the user has completed onboarding.
-     *
-     * Firestore is the source of truth for onboarding completion.
-     * Room is used only as a local cache and must never override a
-     * remote incomplete state with an old local `true` value.
+     * Firestore is the source of truth; Room is only a cache.
      */
     suspend fun isOnboardingCompleted(userId: String): Boolean {
-        // Always check Firestore first so stale Room data cannot mark
-        // onboarding as completed before the user actually completes it.
         val remoteResult = firestoreDataSource.fetchUserProfile(userId)
 
         remoteResult.getOrNull()?.let { remoteProfile ->
-            // Keep Room synchronized with the authoritative remote state.
             userProfileDao.insertOrUpdateProfile(remoteProfile)
             return remoteProfile.isOnboardingCompleted
         }
 
-        // No remote profile means onboarding has not been completed yet.
         return false
     }
 }
