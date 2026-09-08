@@ -74,6 +74,7 @@ class HeightFragment : Fragment(R.layout.fragment_height) {
 
         binding.header.progressTag.text = "2 of 6"
         binding.header.progressBar.progress = 200
+        binding.header.assessmentTitle.text = "Height"
     }
 
     private fun setupScale() {

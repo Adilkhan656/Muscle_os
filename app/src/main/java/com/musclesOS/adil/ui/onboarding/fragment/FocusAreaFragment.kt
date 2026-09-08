@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -51,6 +52,10 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
         binding.bodyImageContainer.post { configureBodyOverlay() }
 
         binding.button3.setOnClickListener {
+            if (selectedIds.isEmpty()) {
+                Toast.makeText(requireContext(), "You have to select 1 focus area", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             viewModel.updateFocusAreas(selectedIds.toList())
             findNavController().navigate(R.id.action_focusAreaFragment_to_goalFragment)
         }
@@ -60,6 +65,7 @@ class FocusAreaFragment : Fragment(R.layout.fragment_focus_area) {
     private fun setupHeader() {
         binding.header.progressTag.text = "5 of 6"
         binding.header.progressBar.progress = 500
+        binding.header.assessmentTitle.text = "Focus Area"
     }
 
     private fun buildChecklist() {

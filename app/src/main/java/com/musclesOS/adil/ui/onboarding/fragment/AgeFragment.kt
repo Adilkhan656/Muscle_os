@@ -39,6 +39,7 @@ class AgeFragment : Fragment(R.layout.fragment_age) {
 
         binding.header.progressTag.text = "4 of 6"
         binding.header.progressBar.progress = 400
+        binding.header.assessmentTitle.text = "Age"
 
         binding.header.backButton.setOnClickListener {
             findNavController().navigateUp()

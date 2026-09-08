@@ -38,6 +38,10 @@ class OnboardingViewModel(
         _userProfile.value = _userProfile.value.copy(weightKg = weightKg)
     }
 
+    fun updateTargetWeight(targetWeightKg: Double) {
+        _userProfile.value = _userProfile.value.copy(targetWeightKg = targetWeightKg)
+    }
+
     fun updateActivityLevel(activityLevel: String) {
         _userProfile.value = _userProfile.value.copy(activityLevel = activityLevel)
     }
@@ -81,6 +85,7 @@ class OnboardingViewModel(
                     age = profile.age,
                     heightCm = profile.heightCm,
                     weightKg = profile.weightKg,
+                    targetWeightKg = profile.targetWeightKg,
                     activityLevel = profile.activityLevel,
                     experienceLevel = profile.experienceLevel,
                     focusAreas = profile.focusAreas,

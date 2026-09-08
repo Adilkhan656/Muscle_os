@@ -79,6 +79,7 @@ class GenderFragment : Fragment(R.layout.fragment_gender) {
     private fun setupHeader() {
         binding.header.progressTag.text = "1 of 6"
         binding.header.progressBar.progress = 100
+        binding.header.assessmentTitle.text = "Gender"
     }
 
     private fun setupClickListeners() {
