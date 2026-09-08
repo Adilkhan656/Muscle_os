@@ -33,6 +33,13 @@ android {
 
         resValue("string", "facebook_app_id", properties.getProperty("facebook_app_id") ?: "")
         resValue("string", "facebook_client_token", properties.getProperty("facebook_client_token") ?: "")
+
+        // Development-only Groq API key. Keep local.properties out of Git.
+        buildConfigField(
+            "String",
+            "GROQ_API_KEY",
+            "\"${properties.getProperty("groq_api_key") ?: ""}\""
+        )
     }
 
     buildTypes {
@@ -50,6 +57,7 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        buildConfig = true
         resValues = true
     }
 }
