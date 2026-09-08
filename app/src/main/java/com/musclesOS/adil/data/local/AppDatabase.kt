@@ -33,7 +33,9 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         "muscle_os_database"
-                    ).build()
+                    )
+                    .fallbackToDestructiveMigration(true)
+                    .build()
 
                 INSTANCE = instance
 

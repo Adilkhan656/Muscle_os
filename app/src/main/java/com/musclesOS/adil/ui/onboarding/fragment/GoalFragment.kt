@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,7 @@ import com.musclesOS.adil.databinding.FragmentGoalBinding
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModel
 import com.musclesOS.adil.ui.onboarding.viewmodel.OnboardingViewModelProvider
 import com.musclesOS.adil.utils.animation.OnboardingAnimations
+import java.util.Locale
 
 class GoalFragment : Fragment(R.layout.fragment_goal) {
 
@@ -50,6 +52,7 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
     private fun setupHeader() {
         binding.header.progressTag.text = "6 of 6"
         binding.header.progressBar.progress = 600
+        binding.header.assessmentTitle.text = "Goal"
         binding.header.backButton.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
             findNavController().navigateUp()
@@ -108,10 +111,48 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
     private fun setupContinueButton() {
         binding.button3.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-            if (selectedGoalIds.isEmpty()) return@setOnClickListener
+            if (selectedGoalIds.isEmpty()) {
+                Toast.makeText(requireContext(), "Please select at least one goal", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val targetWeightStr = binding.etTargetWeight.text.toString().trim()
+            val targetWeight = targetWeightStr.toDoubleOrNull()
+            if (targetWeight == null || targetWeight <= 0.0) {
+                Toast.makeText(requireContext(), "Please enter your targeted weight", Toast.LENGTH_SHORT).show()
+                binding.etTargetWeight.requestFocus()
+                return@setOnClickListener
+            }
+
+            viewModel.updateTargetWeight(targetWeight)
             viewModel.updateGoals(selectedGoalIds.toList())
-            viewModel.updateCustomGoal(binding.etGoalDescription.text.toString())
+            viewModel.updateCustomGoal("")
             saveAndNavigateToHome()
+        }
+    }
+
+    private fun handleKeyboardVisibility() {
+        val bottomBar = binding.bottomBar
+        val extraGap = (12 * resources.displayMetrics.density).toInt()
+
+        ViewCompat.setWindowInsetsAnimationCallback(
+            binding.goalRoot,
+            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
+                override fun onProgress(
+                    insets: WindowInsetsCompat,
+                    runningAnimations: MutableList<WindowInsetsAnimationCompat>
+                ): WindowInsetsCompat {
+                    val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                    bottomBar.translationY = if (imeHeight > 0) (-imeHeight + extraGap).toFloat() else 0f
+                    return insets
+                }
+            }
+        )
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.goalRoot) { _, insets ->
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            bottomBar.translationY = if (imeHeight > 0) (-imeHeight + extraGap).toFloat() else 0f
+            insets
         }
     }
 
@@ -138,21 +179,12 @@ class GoalFragment : Fragment(R.layout.fragment_goal) {
 
     private fun restoreSelection() {
         val savedGoals = viewModel.userProfile.value.goals
-        val savedCustomGoal = viewModel.userProfile.value.customGoal
+        val savedTargetWeight = viewModel.userProfile.value.targetWeightKg
         if (savedGoals.isNotEmpty()) savedGoals.forEach { goalId ->
             val index = goalData.indexOfFirst { it.id == goalId }
             if (index != -1) selectGoal(goalId, goalItems[index])
         }
-        if (savedCustomGoal.isNotEmpty()) binding.etGoalDescription.setText(savedCustomGoal)
-    }
-
-    private fun handleKeyboardVisibility() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.goalRoot) { _, insets ->
-            val keyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-            val keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            binding.bottomBar.animate().translationY(if (keyboardVisible) -keyboardHeight.toFloat() + 40f else 0f).setDuration(250).start()
-            insets
-        }
+        if (savedTargetWeight > 0.0) binding.etTargetWeight.setText(String.format(Locale.US, "%.1f", savedTargetWeight))
     }
 
     private fun applyEntranceAnimations() {

@@ -10,6 +10,7 @@ data class UserProfile(
     // Body measurements
     val heightCm: Int = 0,
     val weightKg: Double = 0.0,
+    val targetWeightKg: Double = 0.0,
 
     // Activity / training information
     val activityLevel: String = "",

@@ -75,6 +75,7 @@ class WeightFragment : Fragment(R.layout.fragment_weight) {
 
         binding.header.progressTag.text = "3 of 6"
         binding.header.progressBar.progress = 300
+        binding.header.assessmentTitle.text = "Weight"
     }
 
     private fun setupInitialWeight() {

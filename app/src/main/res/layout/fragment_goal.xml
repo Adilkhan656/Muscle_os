@@ -50,10 +50,10 @@
     <LinearLayout
         android:id="@+id/featuredRow"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="12dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center"
@@ -65,19 +65,19 @@
         <View
             android:id="@+id/slot1"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_weight="1" />
 
         <View
             android:id="@+id/slot2"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_weight="1" />
 
         <View
             android:id="@+id/slot3"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_weight="1" />
 
     </LinearLayout>
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:alignmentMode="alignMargins"
@@ -164,7 +164,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="16dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -183,27 +183,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/bg_onboarding_tag"
                 android:paddingHorizontal="12dp"
-                android:paddingVertical="5dp"
-                android:text="Other"
+                android:paddingVertical="4dp"
+                android:text="@string/target_weight_required"
                 android:textColor="@color/tag_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/etGoalDescription"
+                android:id="@+id/etTargetWeight"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 android:background="@drawable/bg_goal_card"
-                android:hint="Describe Your Goal"
+                android:hint="Target weight (e.g. 75 kg)"
                 android:imeOptions="actionDone"
-                android:inputType="textCapSentences"
+                android:inputType="numberDecimal"
                 android:paddingHorizontal="16dp"
                 android:textColor="@color/text_main"
                 android:textColorHint="@color/text_hint"
-                android:textSize="15sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -212,10 +213,10 @@
             android:layout_width="132dp"
             android:layout_height="60dp"
             android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="@color/black"
             android:fontFamily="@font/work_sans"
             android:text="Next  →"
-            android:layout_marginTop="15dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="17sp"

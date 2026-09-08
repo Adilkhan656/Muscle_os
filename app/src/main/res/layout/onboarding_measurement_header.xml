@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:fontFamily="@font/work_sans"
-        android:text="Assessment"
         android:textColor="@color/text_main"
         android:textSize="20sp"
         android:textStyle="bold"

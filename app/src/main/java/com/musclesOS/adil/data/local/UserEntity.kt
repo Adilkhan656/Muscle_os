@@ -17,6 +17,8 @@ data class UserProfileEntity(
 
     val weightKg: Double,
 
+    val targetWeightKg: Double,
+
     val activityLevel: String,
 
     val experienceLevel: String,
