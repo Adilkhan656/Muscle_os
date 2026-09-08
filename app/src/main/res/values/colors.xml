@@ -2,11 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
     <color name="orange_primary">#F97316</color>
     <color name="orange_vibrant">#FF6B35</color>
-
-    <!-- Light mode defaults -->
     <color name="bg_main">#FFFFFF</color>
     <color name="text_main">#111214</color>
     <color name="text_sub">#4D4D4D</color>
@@ -15,21 +12,19 @@
     <color name="wave_color">#FFFFFF</color>
     <color name="btn_bg">#111214</color>
     <color name="btn_text">#FFFFFF</color>
-
     <color name="field_bg">#F3F3F4</color>
     <color name="social_bg">#FFFFFF</color>
     <color name="social_stroke">#BABBBE</color>
-
     <color name="scrim_start">#90FFFFFF</color>
     <color name="scrim_end">#FFFFFFFF</color>
-
     <color name="ripple_primary">#40FFFFFF</color>
     <color name="ripple_social">#1A000000</color>
     <color name="premium_text">#F2F3F8</color>
     <color name="premium_muted">#A6AAB6</color>
     <color name="premium_line">#3A3D46</color>
-
     <color name="tag_bg">#111214</color>
     <color name="tag_text">#FFFFFF</color>
     <color name="skip_bg">#FFEDD5</color>
+    <color name="profile_chip_bg">#15231D</color>
+    <color name="profile_chip_stroke">#30463B</color>
 </resources>
