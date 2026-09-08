@@ -1,10 +1,12 @@
 package com.musclesOS.adil.ui.onboarding.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.musclesOS.adil.data.UserProfile
 import com.musclesOS.adil.data.local.UserProfileEntity
+import com.musclesOS.adil.data.remote.GroqApiService
 import com.musclesOS.adil.data.repository.UserProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +16,8 @@ import kotlinx.coroutines.launch
 class OnboardingViewModel(
     private val repository: UserProfileRepository
 ) : ViewModel() {
+
+    private val groqApiService = GroqApiService()
 
     private val _userProfile = MutableStateFlow(UserProfile())
     val userProfile: StateFlow<UserProfile> = _userProfile.asStateFlow()
@@ -93,17 +97,32 @@ class OnboardingViewModel(
 
                 val result = repository.saveUserProfile(entity)
 
-                if (result.isSuccess) {
-                    // Only update local state after the remote profile has been saved.
-                    markOnboardingCompleted()
-                    onSuccess()
-                } else {
+                if (!result.isSuccess) {
                     onError(
                         result.exceptionOrNull() as? Exception
                             ?: Exception("Unknown error")
                     )
+                    return@launch
+                }
+
+                Log.d("GROQ_RESPONSE", "Starting Groq request...")
+
+                val groqResult = groqApiService.generateTestPlan(entity)
+
+                if (groqResult.isSuccess) {
+                    val response = groqResult.getOrThrow()
+                    Log.d("GROQ_RESPONSE", response)
+                    Log.d("GROQ_RESPONSE", "Groq request completed successfully.")
+                    markOnboardingCompleted()
+                    onSuccess()
+                } else {
+                    val error = groqResult.exceptionOrNull() as? Exception
+                        ?: Exception("Unknown Groq error")
+                    Log.e("GROQ_RESPONSE", "Groq request failed", error)
+                    onError(error)
                 }
             } catch (e: Exception) {
+                Log.e("GROQ_RESPONSE", "Onboarding/Groq integration failed", e)
                 onError(e)
             }
         }
