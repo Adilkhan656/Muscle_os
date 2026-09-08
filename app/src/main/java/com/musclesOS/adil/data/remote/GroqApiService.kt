@@ -11,11 +11,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Development-only direct client for the Groq API.
- *
- * IMPORTANT: the API key is currently exposed through BuildConfig and can be
- * extracted from an APK. This is acceptable only for development/testing.
- * Before production release, move this request behind a trusted backend.
+ * Development-only direct Groq client.
+ * The API key is intentionally read from local.properties for development.
+ * Before public production release, move this request behind a trusted backend.
  */
 class GroqApiService {
 
@@ -36,48 +34,89 @@ class GroqApiService {
                 }
 
                 val profileJson = JSONObject().apply {
-                    put("gender", profile.gender)
                     put("age", profile.age)
+                    put("gender", profile.gender)
                     put("heightCm", profile.heightCm)
                     put("currentWeightKg", profile.weightKg)
+                    put("targetWeightKg", profile.targetWeightKg)
                     put("activityLevel", profile.activityLevel)
                     put("experienceLevel", profile.experienceLevel)
-                    put("focusAreas", JSONArray(profile.focusAreas))
                     put("goals", JSONArray(profile.goals))
+                    put("focusAreas", JSONArray(profile.focusAreas))
                     put("customGoal", profile.customGoal)
                 }
 
                 val systemPrompt = """
                     You are the MuscleOS AI Fitness Planner.
-                    Analyze the user's fitness profile and provide a concise personalized plan.
-                    Consider age, gender, height, current weight, activity level, experience,
-                    goals, focus areas, and custom goal.
-                    Do not promise a specific amount of weight loss or muscle gain.
-                    Keep recommendations realistic and safe.
-                    Return ONLY valid JSON with these keys:
-                    summary, daily_calories, protein_grams, recommendations.
-                    The recommendations value must be an array of strings.
+
+                    Create a realistic, personalized 30-day fitness and nutrition plan using ONLY
+                    the supplied profile. The target weight is a hard input and must be considered
+                    when setting calories, macros, training volume, and progress guidance.
+
+                    Return ONLY valid JSON. Do not return markdown, code fences, or explanations.
+                    Do not promise that the target weight will be reached in 30 days.
+                    Do not prescribe medication or diagnose medical conditions.
+                    Prefer practical foods and exercises that a normal beginner/intermediate user can do.
+                    Keep the 30-day output compact enough for a mobile app.
+
+                    Required JSON shape:
+                    {
+                      "profile_summary": string,
+                      "starting_weight_kg": number,
+                      "target_weight_kg": number,
+                      "weight_change_goal_kg": number,
+                      "daily_calories": number,
+                      "protein_grams": number,
+                      "carbs_grams": number,
+                      "fat_grams": number,
+                      "weekly_training_days": number,
+                      "progress_guidance": [string],
+                      "recommendations": [string],
+                      "safety_notes": [string],
+                      "workout_plan": [
+                        {
+                          "day": number,
+                          "focus": string,
+                          "exercises": [
+                            {"name": string, "sets": number, "reps": string, "rest_seconds": number}
+                          ],
+                          "cardio": string,
+                          "recovery": string
+                        }
+                      ],
+                      "nutrition_plan": [
+                        {
+                          "day": number,
+                          "calories": number,
+                          "protein_grams": number,
+                          "breakfast": string,
+                          "lunch": string,
+                          "dinner": string,
+                          "snack": string
+                        }
+                      ]
+                    }
+
+                    workout_plan MUST contain exactly 30 day objects and nutrition_plan MUST contain exactly 30 day objects.
+                    Vary workouts and meals across the month while keeping the plan coherent.
                 """.trimIndent()
 
                 val requestJson = JSONObject().apply {
                     put("model", MODEL)
-                    put("temperature", 0.2)
+                    put("temperature", 0.35)
+                    put("max_completion_tokens", 7500)
                     put("response_format", JSONObject().put("type", "json_object"))
                     put(
                         "messages",
                         JSONArray().apply {
-                            put(
-                                JSONObject().apply {
-                                    put("role", "system")
-                                    put("content", systemPrompt)
-                                }
-                            )
-                            put(
-                                JSONObject().apply {
-                                    put("role", "user")
-                                    put("content", profileJson.toString())
-                                }
-                            )
+                            put(JSONObject().apply {
+                                put("role", "system")
+                                put("content", systemPrompt)
+                            })
+                            put(JSONObject().apply {
+                                put("role", "user")
+                                put("content", profileJson.toString())
+                            })
                         }
                     )
                 }
@@ -85,7 +124,7 @@ class GroqApiService {
                 val connection = (URL(ENDPOINT).openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
                     connectTimeout = 30_000
-                    readTimeout = 60_000
+                    readTimeout = 120_000
                     doOutput = true
                     setRequestProperty("Authorization", "Bearer $apiKey")
                     setRequestProperty("Content-Type", "application/json")
@@ -99,10 +138,8 @@ class GroqApiService {
                 val responseBody = if (statusCode in 200..299) {
                     connection.inputStream.bufferedReader().use { it.readText() }
                 } else {
-                    connection.errorStream?.bufferedReader()?.use { it.readText() }
-                        ?: "No error body returned"
+                    connection.errorStream?.bufferedReader()?.use { it.readText() } ?: "No error body returned"
                 }
-
                 connection.disconnect()
 
                 if (statusCode !in 200..299) {
@@ -112,13 +149,14 @@ class GroqApiService {
                     )
                 }
 
-                val responseJson = JSONObject(responseBody)
-                val content = responseJson
+                val content = JSONObject(responseBody)
                     .getJSONArray("choices")
                     .getJSONObject(0)
                     .getJSONObject("message")
                     .getString("content")
 
+                // Validate that the model returned JSON before handing it to the app.
+                JSONObject(content)
                 Result.success(content)
             } catch (e: Exception) {
                 Log.e(TAG, "Groq request failed", e)
