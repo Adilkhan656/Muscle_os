@@ -12,11 +12,8 @@ import androidx.core.view.doOnPreDraw
 import com.musclesOS.adil.databinding.ActivityMainBinding
 import com.musclesOS.adil.repository.AuthRepository
 import com.musclesOS.adil.ui.auth.LoginActivity
+import com.musclesOS.adil.ui.profile.ProfileActivity
 
-/**
- * The main dashboard activity for the application.
- * Handles the authenticated user experience and overall app navigation.
- */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -33,19 +30,11 @@ class MainActivity : AppCompatActivity() {
             runWaveReveal()
         }
 
-        binding.button2.setOnClickListener {
-            AuthRepository().signOut()
-            OneSignalManager.logout()
-
-            startActivity(
-                Intent(
-                    this,
-                    LoginActivity::class.java
-                )
-            )
-
-            finish()
+        binding.profileButton.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
+
+        binding.button2.setOnClickListener { signOut() }
     }
 
     override fun onResume() {
@@ -53,9 +42,13 @@ class MainActivity : AppCompatActivity() {
         OneSignalManager.promptNotificationPermissionIfDaily(this)
     }
 
-    /**
-     * Executes the wave reveal animation when navigating from the Splash screen.
-     */
+    private fun signOut() {
+        AuthRepository().signOut()
+        OneSignalManager.logout()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
     private fun runWaveReveal() {
         binding.main.doOnPreDraw {
             binding.waveRevealView.setBehindColor(ContextCompat.getColor(this, R.color.orange_primary))
@@ -69,9 +62,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Maintains the orange theme for system bars during the reveal transition.
-     */
     private fun keepOrangeSystemBarsForReveal() {
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
