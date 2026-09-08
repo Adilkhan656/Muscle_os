@@ -1,18 +1,17 @@
 package com.musclesOS.adil
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.doOnPreDraw
 import com.musclesOS.adil.databinding.ActivityMainBinding
-import com.musclesOS.adil.repository.AuthRepository
-import com.musclesOS.adil.ui.auth.LoginActivity
-import com.musclesOS.adil.ui.profile.ProfileActivity
+import com.musclesOS.adil.ui.main.GoalsFragment
+import com.musclesOS.adil.ui.main.HomeFragment
+import com.musclesOS.adil.ui.main.TrackingFragment
+import com.musclesOS.adil.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,20 +20,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (savedInstanceState == null && intent.getBooleanExtra("SHOW_WAVE", false)) {
-            keepOrangeSystemBarsForReveal()
             runWaveReveal()
         }
 
-        binding.profileButton.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            showDestination(item.itemId)
+            true
         }
 
-        binding.button2.setOnClickListener { signOut() }
+        if (savedInstanceState == null) {
+            binding.bottomNavigation.selectedItemId = R.id.navigation_profile
+        }
     }
 
     override fun onResume() {
@@ -42,30 +49,24 @@ class MainActivity : AppCompatActivity() {
         OneSignalManager.promptNotificationPermissionIfDaily(this)
     }
 
-    private fun signOut() {
-        AuthRepository().signOut()
-        OneSignalManager.logout()
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-    }
-
     private fun runWaveReveal() {
         binding.main.doOnPreDraw {
             binding.waveRevealView.setBehindColor(ContextCompat.getColor(this, R.color.orange_primary))
             binding.waveRevealView.reveal(duration = 1100, isReveal = true) {
                 binding.waveRevealView.visibility = View.GONE
-                WindowCompat.getInsetsController(window, window.decorView).apply {
-                    isAppearanceLightStatusBars = true
-                    isAppearanceLightNavigationBars = true
-                }
             }
         }
     }
 
-    private fun keepOrangeSystemBarsForReveal() {
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = false
-            isAppearanceLightNavigationBars = false
+    private fun showDestination(itemId: Int) {
+        val fragment = when (itemId) {
+            R.id.navigation_home -> HomeFragment()
+            R.id.navigation_tracking -> TrackingFragment()
+            R.id.navigation_goals -> GoalsFragment()
+            else -> ProfileFragment()
         }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainContent, fragment)
+            .commit()
     }
 }

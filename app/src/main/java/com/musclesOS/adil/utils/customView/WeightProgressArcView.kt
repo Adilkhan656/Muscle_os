@@ -15,7 +15,7 @@ class WeightProgressArcView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : View(context, attrs) {
     private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
-    private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = Color.rgb(98, 232, 155) }
+    private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = Color.rgb(249, 115, 22) }
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER; typeface = android.graphics.Typeface.DEFAULT_BOLD }
     private val rect = RectF()
     private var currentWeight = 0.0
@@ -33,7 +33,7 @@ class WeightProgressArcView @JvmOverloads constructor(
         val padding = stroke * 1.2f
         rect.set(padding, padding, width - padding, height * 1.65f)
         trackPaint.strokeWidth = stroke
-        trackPaint.color = Color.rgb(55, 63, 70)
+        trackPaint.color = Color.rgb(62, 62, 64)
         canvas.drawArc(rect, 180f, 180f, false, trackPaint)
 
         val distance = abs(currentWeight - targetWeight)

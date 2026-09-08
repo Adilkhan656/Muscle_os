@@ -27,4 +27,6 @@
     <color name="skip_bg">#FFEDD5</color>
     <color name="profile_chip_bg">#15231D</color>
     <color name="profile_chip_stroke">#30463B</color>
+    <color name="profile_chip_bg_light">#F3F3F4</color>
+    <color name="profile_chip_stroke_light">#E1E1E1</color>
 </resources>

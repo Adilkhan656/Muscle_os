@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_main">#0B0C0E</color>
-    <color name="text_main">#FFFFFF</color>
-    <color name="text_sub">#BABBBE</color>
-    <color name="text_hint">#8E939D</color>
-    <color name="text_field">#E2E4E9</color>
-    <color name="wave_color">#0B0C0E</color>
-    <color name="btn_bg">#FFFFFF</color>
-    <color name="btn_text">#111214</color>
+    <color name="bg_main">#FFFFFF</color>
+    <color name="text_main">#111214</color>
+    <color name="text_sub">#4D4D4D</color>
+    <color name="text_hint">#676C75</color>
+    <color name="text_field">#393C43</color>
+    <color name="wave_color">#FFFFFF</color>
+    <color name="btn_bg">#111214</color>
+    <color name="btn_text">#FFFFFF</color>
 
-    <color name="field_bg">#1A1C20</color>
-    <color name="social_bg">#1A1C20</color>
-    <color name="social_stroke">#393C43</color>
+    <color name="field_bg">#F3F3F4</color>
+    <color name="social_bg">#FFFFFF</color>
+    <color name="social_stroke">#BABBBE</color>
 
-    <color name="scrim_start">#900B0C0E</color>
-    <color name="scrim_end">#0B0C0E</color>
+    <color name="scrim_start">#90FFFFFF</color>
+    <color name="scrim_end">#FFFFFFFF</color>
 
-    <color name="tag_bg">#FFFFFF</color>
-    <color name="tag_text">#000000</color>
+    <color name="tag_bg">#111214</color>
+    <color name="tag_text">#FFFFFF</color>
 
-    <color name="skip_bg">#2D1A0A</color>
+    <color name="skip_bg">#FFEDD5</color>
 </resources>

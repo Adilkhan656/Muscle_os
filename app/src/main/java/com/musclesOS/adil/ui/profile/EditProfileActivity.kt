@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -27,6 +29,13 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupDropdowns()
@@ -56,14 +65,14 @@ class EditProfileActivity : AppCompatActivity() {
             dataSource.fetchUserProfile(user.uid).onSuccess { profile ->
                 if (profile == null) return@onSuccess
                 binding.ageInput.setText(profile.age.toString())
-                binding.genderInput.setText(profile.gender, false)
+                binding.genderInput.setText(pretty(profile.gender), false)
                 binding.heightInput.setText(profile.heightCm.toString())
-                binding.currentWeightInput.setText(profile.weightKg.toString())
-                binding.targetWeightInput.setText(profile.targetWeightKg.toString())
-                binding.activityInput.setText(profile.activityLevel, false)
-                binding.experienceInput.setText(profile.experienceLevel, false)
-                binding.goalsInput.setText(profile.goals.joinToString(", "))
-                binding.focusInput.setText(profile.focusAreas.joinToString(", "))
+                binding.currentWeightInput.setText(formatWeight(profile.weightKg))
+                binding.targetWeightInput.setText(formatWeight(profile.targetWeightKg))
+                binding.activityInput.setText(pretty(profile.activityLevel), false)
+                binding.experienceInput.setText(pretty(profile.experienceLevel), false)
+                binding.goalsInput.setText(profile.goals.joinToString(", ") { pretty(it) })
+                binding.focusInput.setText(profile.focusAreas.joinToString(", ") { pretty(it) })
                 binding.customGoalInput.setText(profile.customGoal)
             }.onFailure {
                 Toast.makeText(this@EditProfileActivity, it.message ?: "Unable to load profile.", Toast.LENGTH_SHORT).show()
@@ -123,7 +132,9 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun csv(value: String): List<String> = value.split(",").map { it.trim().lowercase().replace(' ', '_') }.filter { it.isNotBlank() }.distinct()
+    private fun csv(value: String?): List<String> = value?.split(",")?.map { it.trim().lowercase().replace(' ', '_') }?.filter { it.isNotBlank() }?.distinct() ?: emptyList()
+    private fun pretty(value: String): String = value.replace('_', ' ').replaceFirstChar { it.uppercase() }
+    private fun formatWeight(value: Double): String = String.format(java.util.Locale.US, "%.1f", value).removeSuffix(".0")
     private fun showError(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     private fun logout() {
